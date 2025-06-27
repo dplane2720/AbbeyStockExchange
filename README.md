@@ -15,12 +15,12 @@ Coming with next update:
 ### Running the Application
 1. Clone the repo: `git clone http://www.github.com/dplane2720/AbbeyStockExchange`
 2. Enter repo: `cd AbbeyStockExchange`
-- (2.5 Optional) Create the python virtual environment: `python -m venv venv`
+3. Create the python virtual environment: `python -m venv venv`
   - Source the venv
   - On Mac / Linux: `source venv/bin/activate`
   - On Windows: `venv\Scripts\activate`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Run the app: `python app.py`
+4. Install dependencies: `pip install -r requirements.txt`
+5. Run the app: `python app.py`
 
 ### Access Points
 - **Customer Display:** http://localhost:5001/display
