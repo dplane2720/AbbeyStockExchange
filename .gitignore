@@ -19,10 +19,6 @@ core/__init__.py
 
 core/__pycache__/
 
-data/backups/2025-06-23-backup.meta
-
-data/backups/2025-06-23-backup.yaml
-
 data/logs/error.log
 
 static/frontend/assets/audio/place_wav_file_here.txt

@@ -1,0 +1,10 @@
+{
+  "backup_path": "/Users/dplane/git_repos/ASEv2/specs/spec-02-full-featured/implementation/data/backups/2025-06-23-backup.yaml",
+  "backup_name": "2025-06-23-backup.yaml",
+  "created_at": "2025-06-23T14:16:17.789213",
+  "file_size": 1326,
+  "file_checksum": "82e0c9aaf4ac16acc77654283a0c7a64e7cf4140eb57ced68d6544a9db720b77",
+  "verification_passed": false,
+  "description": "Manual backup",
+  "backup_type": "manual"
+}
