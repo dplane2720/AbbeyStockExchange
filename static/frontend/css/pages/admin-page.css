@@ -1,0 +1,921 @@
+/**
+ * Abbey Stock Exchange v5 - Admin Page Styles
+ * 
+ * Touch-optimized admin interface matching admin.jpg reference.
+ * Responsive grid layout with large touch targets.
+ */
+
+.admin-page {
+  width: 100vw;
+  height: 100vh;
+  background: #f5f5f5;
+  padding: clamp(0.5rem, 1vh, 1rem);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-main {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr min-content; /* drinks-grid takes space, settings-section takes only what it needs */
+  gap: clamp(0.5rem, 1vh, 1rem);
+  max-width: none; /* Remove width restriction */
+  margin: 0;
+  overflow: hidden; /* Prevent overall scrolling */
+}
+
+/* Viewport scaling for small screens */
+@media (max-height: 600px) {
+  .admin-page {
+    padding: var(--space-1);
+  }
+  
+  .admin-main {
+    gap: var(--space-1);
+  }
+}
+
+/* Ensure settings always fit */
+.admin-settings {
+  flex-shrink: 0; /* Don't shrink settings */
+}
+
+/* Drinks Grid Layout - Viewport-based scaling with consistent columns */
+.drinks-grid {
+  display: grid;
+  gap: clamp(0.5rem, 1vw, 1rem);
+  align-content: start;
+  overflow-y: auto;
+  padding: clamp(0.5rem, 1vh, 1rem);
+  
+  /* Fixed grid layout that scales buttons instead of changing columns */
+  grid-template-columns: repeat(4, 1fr); /* Always 4 columns */
+  
+  /* CSS custom properties for button scaling */
+  --button-min-height: clamp(120px, 15vh, 200px);
+  --button-font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+  --button-price-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  --button-padding: clamp(0.75rem, 1.5vh, 1.5rem);
+}
+
+/* Individual Drink Button - Scales with viewport */
+.drink-button {
+  background: #4caf50;
+  border: none;
+  border-radius: clamp(8px, 1vw, 12px);
+  padding: var(--button-padding);
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: var(--button-min-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.drink-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.drink-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.drink-button.pressed {
+  transform: scale(0.98);
+  background: #45a049;
+}
+
+/* Drink Button Content - Scales with viewport */
+.drink-name {
+  font-size: var(--button-font-size);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: clamp(0.5rem, 1vh, 1rem);
+}
+
+.drink-price-section {
+  margin: clamp(0.5rem, 1vh, 1rem) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.25rem, 0.5vw, 0.5rem);
+}
+
+.drink-price {
+  font-size: var(--button-price-size);
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+}
+
+.drink-trend {
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  margin-left: clamp(0.25rem, 0.5vw, 0.5rem);
+}
+
+.trend-up {
+  color: #ffeb3b;
+}
+
+.trend-down {
+  color: #ff5722;
+}
+
+.trend-stable {
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+/* Sale Hint for Drink Buttons - Scales with viewport */
+.sale-hint {
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: auto;
+  padding: clamp(0.25rem, 0.5vh, 0.5rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Add New Drink Button - Scales with viewport */
+.add-drink-button {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+  border-radius: clamp(8px, 1vw, 12px);
+  padding: var(--button-padding);
+  color: #666666;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: var(--button-min-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1vh, 1rem);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-style: dashed;
+}
+
+.add-drink-button:hover {
+  border-color: #2196f3;
+  color: #2196f3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
+}
+
+.add-drink-button:active {
+  transform: translateY(0);
+}
+
+.add-drink-icon {
+  font-size: clamp(2rem, 3vw, 2.5rem); /* Slightly smaller for the plus icon */
+  color: #2196f3;
+  /* Font Awesome plus icon looks better slightly smaller than emoji */
+}
+
+.add-drink-text {
+  font-size: var(--button-font-size);
+  font-weight: 600;
+  color: #2196f3;
+}
+
+/* Settings Section - Horizontal layout with 3 equal columns */
+.settings-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* 3 equal columns */
+  gap: clamp(0.5rem, 1vw, 1rem);
+  padding: clamp(0.5rem, 1vh, 1rem);
+  /* Single row layout */
+  min-height: min-content;
+  max-height: 15vh; /* Less height needed for single row */
+  overflow-y: auto; /* Allow scrolling if needed */
+}
+
+.settings-btn {
+  background: #607d8b;
+  border: none;
+  border-radius: clamp(6px, 0.8vw, 8px);
+  padding: clamp(0.75rem, 1.5vh, 1rem) clamp(0.75rem, 1.2vw, 1rem);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: row; /* Back to horizontal layout */
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 0.8vw, 0.75rem);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  font-weight: 600;
+  min-height: clamp(50px, 8vh, 70px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.settings-btn:hover {
+  background: #546e7a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.settings-btn:active {
+  transform: translateY(0);
+}
+
+.settings-btn.edit-drinks {
+  background: #607d8b;
+}
+
+.settings-btn.app-settings {
+  background: #607d8b;
+}
+
+.settings-btn.backups {
+  background: #607d8b;
+}
+
+.settings-icon {
+  font-size: clamp(1rem, 1.4vw, 1.2rem); /* Proportional to text */
+  min-width: auto;
+  text-align: center;
+  /* Font Awesome icons automatically scale and align well */
+}
+
+.settings-text {
+  font-size: clamp(0.8rem, 1.2vw, 1rem); /* Match button font size */
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Modal System */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    max-width: 90vw;
+    max-height: 90vh;
+    margin: 20px;
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-height: calc(100vh - 40px);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #dee2e6;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #212529;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    font-weight: bold;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 24px;
+    overflow-y: auto;
+    max-height: calc(90vh - 200px);
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid #dee2e6;
+    background: #f8f9fa;
+    border-radius: 0 0 12px 12px;
+    gap: 12px;
+}
+
+/* Form styling for modals */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+    background-color: #fff;
+    min-height: 44px; /* Touch-friendly */
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.form-group input.is-valid,
+.form-group select.is-valid,
+.form-group textarea.is-valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+.form-group input.is-invalid,
+.form-group select.is-invalid,
+.form-group textarea.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.form-text {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Button styling */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    margin-bottom: 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    min-width: 80px;
+}
+
+.btn-primary {
+    color: #fff;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    border-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    color: #6c757d;
+    background-color: transparent;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-success {
+    color: #fff;
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
+    border-color: #1e7e34;
+}
+
+.btn-danger {
+    color: #fff;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    border-color: #c82333;
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 14px;
+    min-height: 36px;
+}
+
+/* Drink List Modal specific styling - Viewport-based scaling like customer display */
+.drink-list-modal {
+  /* CSS custom properties for dynamic table scaling */
+  --drink-count: 10; /* Default assumption for modal */
+  --available-modal-height: 60vh; /* Available space in modal */
+  --modal-row-height: clamp(45px, calc(var(--available-modal-height) / var(--drink-count)), 70px);
+  --modal-font-size: clamp(0.9rem, 1.6vw, 1.2rem); /* Larger font size */
+  --modal-header-size: clamp(0.85rem, 1.4vw, 1.1rem); /* Larger header text */
+  overflow: hidden; /* Prevent body scrolling */
+  max-height: calc(90vh - 200px); /* Prevent modal body from being too tall */
+}
+
+.drink-list-modal .drinks-table-container {
+    overflow-y: auto; /* Enable scrolling for table */
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    height: calc(60vh - 120px); /* Account for modal header/footer */
+    display: flex;
+    flex-direction: column;
+}
+
+.drinks-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #fff;
+    font-size: var(--modal-font-size); /* Dynamic font size */
+    height: 100%; /* Take full container height */
+    display: table;
+    table-layout: fixed; /* Force column widths */
+}
+
+.drinks-table thead {
+    display: table-header-group;
+}
+
+.drinks-table tbody {
+    display: table-row-group;
+}
+
+.drinks-table th,
+.drinks-table td {
+    padding: clamp(6px, 1vh, 12px) clamp(8px, 1.2vw, 16px);
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+    height: var(--modal-row-height); /* Dynamic row height */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.drinks-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-top: none;
+    font-size: var(--modal-header-size); /* Smaller header text */
+    height: clamp(30px, 5vh, 45px); /* Fixed header height */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-align: center; /* Center all headers */
+}
+
+.drinks-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.drinks-table .drink-name {
+    font-weight: 500;
+    color: #212529;
+    font-size: var(--modal-font-size); /* Consistent with table font */
+    width: 25%; /* Reduced width for drink name */
+}
+
+.drinks-table .reorder-controls {
+    text-align: center;
+    white-space: nowrap;
+    width: 15%; /* Fixed width for reorder controls */
+}
+
+.drinks-table .current-price {
+    text-align: center;
+    width: 15%; /* Fixed width for current price */
+}
+
+.drinks-table .min-price {
+    text-align: center;
+    width: 15%; /* Fixed width for min price */
+}
+
+.drinks-table .actions {
+    text-align: center;
+    white-space: nowrap;
+    padding: clamp(4px, 0.8vh, 8px) clamp(8px, 1.2vw, 16px);
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+    height: var(--modal-row-height);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.drinks-table .actions > * {
+    display: inline-flex;
+    gap: clamp(4px, 0.5vw, 8px);
+    justify-content: center;
+    align-items: center;
+}
+
+.reorder-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: clamp(4px, 0.8vh, 8px) clamp(6px, 1vw, 10px);
+    cursor: pointer;
+    font-size: clamp(12px, 1.2vw, 16px);
+    min-width: clamp(28px, 3.5vw, 36px);
+    min-height: clamp(28px, 3.5vh, 36px);
+    flex-shrink: 0;
+}
+
+.reorder-btn:hover {
+    background: #495057;
+}
+
+.action-btn {
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: clamp(3px, 0.6vh, 6px) clamp(4px, 0.8vw, 8px);
+    cursor: pointer;
+    font-size: clamp(11px, 1vw, 14px);
+    min-width: clamp(24px, 3vw, 32px);
+    min-height: clamp(24px, 3vh, 32px);
+    flex-shrink: 0;
+}
+
+.action-btn.edit {
+    background: #007bff;
+}
+
+.action-btn.edit:hover {
+    background: #0056b3;
+}
+
+.action-btn.delete {
+    background: #dc3545;
+}
+
+.action-btn.delete:hover {
+    background: #c82333;
+}
+
+/* Dynamic scaling classes for modal based on drink count */
+.drink-list-modal.few-drinks {
+  --drink-count: 5;
+}
+
+.drink-list-modal.normal-drinks {
+  --drink-count: 10;
+}
+
+.drink-list-modal.many-drinks {
+  --drink-count: 15;
+}
+
+.drink-list-modal.lots-of-drinks {
+  --drink-count: 20;
+}
+
+/* When there are too many drinks in modal, enable scrolling */
+.drink-list-modal.scrollable .drinks-table tbody {
+  overflow-y: auto;
+}
+
+.drink-list-modal.scrollable .drinks-table th,
+.drink-list-modal.scrollable .drinks-table td {
+  height: clamp(25px, 3vh, 35px); /* Smaller rows for scrolling */
+}
+
+
+
+/* App Settings Modal specific styling */
+.app-settings-modal .settings-form {
+    max-width: 500px;
+}
+
+.app-settings-modal .checkbox-inline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.app-settings-modal .checkbox-inline label {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.app-settings-modal .checkbox-inline input[type="checkbox"] {
+    width: auto;
+    margin-left: 12px;
+    transform: scale(1.5);
+    min-width: 20px;
+    min-height: 20px;
+}
+
+/* Backups Modal specific styling */
+.backups-modal .backup-status {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.backups-modal .create-backup-btn {
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.backups-modal .backups-table-container {
+    overflow-x: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.backups-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.backups-table th,
+.backups-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.backups-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+.backups-table .backup-actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Add/Edit Drink Modal specific styling */
+.add-drink-modal .drink-form,
+.edit-drink-modal .drink-form {
+    max-width: 400px;
+}
+
+.add-drink-modal input[type="number"],
+.edit-drink-modal input[type="number"] {
+    text-align: right;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+}
+
+/* Modal animations */
+.modal.showing .modal-dialog {
+    transform: scale(0.9);
+    opacity: 0;
+    animation: modalFadeIn 0.3s ease forwards;
+}
+
+.modal.hiding .modal-dialog {
+    animation: modalFadeOut 0.3s ease forwards;
+}
+
+@keyframes modalFadeIn {
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes modalFadeOut {
+    to {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+}
+
+/* Connection Status */
+.connection-status {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  z-index: 100;
+}
+
+.connection-status.connected {
+  background: rgba(76, 175, 80, 0.9);
+}
+
+.connection-status.disconnected {
+  background: rgba(244, 67, 54, 0.9);
+}
+
+/* Loading State */
+.loading-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-8);
+  color: #666666;
+  font-size: 1.2rem;
+}
+
+/* Viewport-based scaling eliminates need for responsive breakpoints
+ * All elements now scale fluidly with clamp() and viewport units
+ * Fixed 4-column layout maintains consistency across all screen sizes
+ */
+
+/* Touch Feedback for Mobile */
+@media (hover: none) and (pointer: coarse) {
+  .drink-button:active,
+  .settings-btn:active,
+  .add-drink-button:active {
+    transform: scale(0.96);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .drink-button {
+    border: 2px solid #000000;
+  }
+  
+  .add-drink-button {
+    border: 2px solid #000000;
+  }
+  
+  .settings-btn {
+    border: 2px solid #000000;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .drink-button,
+  .settings-btn,
+  .add-drink-button,
+  .modal-dialog {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Responsive modal adjustments - Updated for viewport-based scaling */
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 95vw;
+        margin: 10px;
+    }
+    
+    .modal-body {
+        padding: 16px;
+        max-height: calc(100vh - 140px);
+    }
+    
+    .modal-header,
+    .modal-footer {
+        padding: 16px;
+    }
+    
+    /* Modal tables now use viewport-based scaling instead of fixed small sizes */
+    .drink-list-modal {
+        --available-modal-height: 50vh; /* Smaller on mobile */
+        --modal-font-size: clamp(0.7rem, 3vw, 0.9rem); /* More aggressive scaling on mobile */
+        --modal-header-size: clamp(0.65rem, 2.8vw, 0.8rem);
+    }
+    
+    .backups-table {
+        font-size: clamp(0.7rem, 3vw, 0.9rem);
+    }
+    
+    .backups-table th,
+    .backups-table td {
+        padding: clamp(6px, 2vw, 10px);
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+    }
+    
+    /* Keep drink list modal footer horizontal */
+    .drink-list-modal .modal-footer {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .drink-list-modal .modal-footer .btn {
+        width: auto;
+        flex: 1;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}

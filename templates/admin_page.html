@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Abbey Stock Exchange - Admin{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/pages/admin-page.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-page">
+    <main class="admin-main">
+        <!-- Drinks Grid -->
+        <section class="drinks-grid" id="drinks-grid">
+            <!-- Drink buttons will be populated by JavaScript -->
+            <div class="loading-state">
+                <p>Loading drinks...</p>
+            </div>
+        </section>
+        
+        <!-- Settings Buttons -->
+        <section class="settings-section">
+            <button class="settings-btn edit-drinks" id="edit-drink-list-btn">
+                <i class="settings-icon fa-solid fa-list"></i>
+                <span class="settings-text">Edit Drink List</span>
+            </button>
+            
+            <button class="settings-btn app-settings" id="app-settings-btn">
+                <i class="settings-icon fa-solid fa-gear"></i>
+                <span class="settings-text">App Settings</span>
+            </button>
+            
+            <button class="settings-btn backups" id="backups-btn">
+                <i class="settings-icon fa-solid fa-download"></i>
+                <span class="settings-text">Backups</span>
+            </button>
+        </section>
+    </main>
+    
+    <!-- Modal Container for all modals -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div id="modal-container" class="modal-container">
+            <!-- Modal content will be dynamically loaded here -->
+        </div>
+    </div>
+    
+    <!-- Connection Status -->
+    <div class="connection-status" id="connection-status">Connected</div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<!-- Page-specific components -->
+<script src="{{ url_for('static', filename='frontend/js/components/drink-button.js') }}"></script>
+
+<!-- Page script -->
+<script src="{{ url_for('static', filename='frontend/js/pages/admin-page.js') }}"></script>
+
+<script>
+    // Initialize admin page when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        window.AdminPage.init();
+    });
+</script>
+{% endblock %}

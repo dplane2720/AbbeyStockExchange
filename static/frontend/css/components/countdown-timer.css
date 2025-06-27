@@ -1,0 +1,433 @@
+/**
+ * Abbey Stock Exchange v5 - Countdown Timer Component Styles
+ * 
+ * Real-time countdown timer with progress indicators, visual states,
+ * and responsive design for various screen sizes.
+ */
+
+/* Base Timer Container */
+.countdown-timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background: var(--card-bg);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--card-shadow);
+    border: var(--border-width-1) solid var(--card-border-color);
+    transition: var(--transition-base);
+}
+
+/* Timer Display */
+.timer-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    text-align: center;
+}
+
+.timer-text {
+    font-family: var(--timer-font-family);
+    font-size: var(--timer-font-size);
+    font-weight: var(--timer-font-weight);
+    color: var(--timer-color-normal);
+    line-height: var(--line-height-none);
+    margin: 0;
+    transition: var(--transition-color);
+    letter-spacing: 0.05em;
+}
+
+.timer-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+
+/* Progress Ring */
+.timer-progress {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-ring {
+    width: 120px;
+    height: 120px;
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    stroke: var(--color-primary);
+    stroke-linecap: round;
+    stroke-dasharray: 339.292; /* 2 * π * 54 */
+    stroke-dashoffset: 339.292;
+    transition: stroke-dashoffset var(--duration-300) var(--ease-out),
+                stroke var(--duration-150) var(--ease-in-out);
+    fill: none;
+}
+
+/* Timer Status Indicator */
+.timer-status {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-muted);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-height: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Timer States */
+.countdown-timer-container.warning {
+    border-color: var(--color-warning);
+    background: rgba(243, 156, 18, 0.05);
+}
+
+.countdown-timer-container.warning .timer-text {
+    color: var(--timer-color-warning);
+}
+
+.countdown-timer-container.warning .progress-ring-circle {
+    stroke: var(--color-warning);
+}
+
+.countdown-timer-container.warning .timer-status {
+    color: var(--color-warning-dark);
+}
+
+.countdown-timer-container.critical {
+    border-color: var(--color-danger);
+    background: rgba(231, 76, 60, 0.05);
+    animation: timer-urgent-pulse 2s infinite;
+}
+
+.countdown-timer-container.critical .timer-text {
+    color: var(--timer-color-critical);
+    animation: timer-text-pulse 1s infinite;
+}
+
+.countdown-timer-container.critical .progress-ring-circle {
+    stroke: var(--color-danger);
+}
+
+.countdown-timer-container.critical .timer-status {
+    color: var(--color-danger-dark);
+}
+
+.countdown-timer-container.expired {
+    border-color: var(--color-gray-400);
+    background: var(--color-gray-100);
+}
+
+.countdown-timer-container.expired .timer-text {
+    color: var(--color-gray-600);
+}
+
+.countdown-timer-container.expired .progress-ring-circle {
+    stroke: var(--color-gray-400);
+    stroke-dashoffset: 0;
+}
+
+.countdown-timer-container.expired .timer-status {
+    color: var(--color-gray-600);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Timer Variants */
+.countdown-timer-container.variant-compact {
+    padding: var(--space-4);
+    gap: var(--space-2);
+}
+
+.countdown-timer-container.variant-compact .timer-text {
+    font-size: var(--font-size-xl);
+}
+
+.countdown-timer-container.variant-compact .progress-ring {
+    width: 80px;
+    height: 80px;
+}
+
+.countdown-timer-container.variant-large {
+    padding: var(--space-8);
+    gap: var(--space-6);
+}
+
+.countdown-timer-container.variant-large .timer-text {
+    font-size: var(--font-size-5xl);
+}
+
+.countdown-timer-container.variant-large .progress-ring {
+    width: 160px;
+    height: 160px;
+}
+
+/* Progress Ring States */
+.progress-ring-circle.progress-normal {
+    stroke: var(--color-primary);
+}
+
+.progress-ring-circle.progress-warning {
+    stroke: var(--color-warning);
+}
+
+.progress-ring-circle.progress-critical {
+    stroke: var(--color-danger);
+}
+
+/* Timer Sizes */
+.countdown-timer-container.size-small {
+    padding: var(--space-3);
+    gap: var(--space-2);
+}
+
+.countdown-timer-container.size-small .timer-text {
+    font-size: var(--font-size-xl);
+}
+
+.countdown-timer-container.size-small .timer-label {
+    font-size: var(--font-size-xs);
+}
+
+.countdown-timer-container.size-small .progress-ring {
+    width: 60px;
+    height: 60px;
+}
+
+.countdown-timer-container.size-large {
+    padding: var(--space-10);
+    gap: var(--space-8);
+}
+
+.countdown-timer-container.size-large .timer-text {
+    font-size: var(--font-size-6xl);
+}
+
+.countdown-timer-container.size-large .timer-label {
+    font-size: var(--font-size-base);
+}
+
+.countdown-timer-container.size-large .progress-ring {
+    width: 200px;
+    height: 200px;
+}
+
+/* Combined Timer and Progress Layout */
+.timer-with-progress {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-with-progress .timer-display {
+    position: absolute;
+    z-index: 1;
+}
+
+.timer-with-progress .timer-text {
+    font-size: var(--font-size-lg);
+}
+
+/* Audio Notification Indicator */
+.timer-audio-indicator {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    width: 16px;
+    height: 16px;
+    background: var(--color-success);
+    border-radius: var(--border-radius-full);
+    display: none;
+}
+
+.countdown-timer-container[data-audio="enabled"] .timer-audio-indicator {
+    display: block;
+}
+
+/* Animations */
+@keyframes timer-urgent-pulse {
+    0%, 100% {
+        box-shadow: var(--card-shadow);
+    }
+    50% {
+        box-shadow: var(--card-shadow), 
+                    0 0 0 4px rgba(231, 76, 60, 0.2);
+    }
+}
+
+@keyframes timer-text-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes progress-complete {
+    0% {
+        stroke-dashoffset: 339.292;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .countdown-timer-container {
+        padding: var(--space-4);
+        gap: var(--space-3);
+    }
+    
+    .timer-text {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .progress-ring {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .countdown-timer-container.size-large {
+        padding: var(--space-6);
+        gap: var(--space-4);
+    }
+    
+    .countdown-timer-container.size-large .timer-text {
+        font-size: var(--font-size-4xl);
+    }
+    
+    .countdown-timer-container.size-large .progress-ring {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-timer-container {
+        padding: var(--space-3);
+        gap: var(--space-2);
+    }
+    
+    .timer-text {
+        font-size: var(--font-size-xl);
+    }
+    
+    .timer-label {
+        font-size: var(--font-size-xs);
+    }
+    
+    .progress-ring {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .countdown-timer-container.size-large .timer-text {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .countdown-timer-container.size-large .progress-ring {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* Customer Display Specific Styles */
+.customer-display .countdown-timer-container {
+    background: transparent;
+    border: var(--border-width-2) solid var(--customer-display-accent);
+    color: var(--customer-display-text);
+}
+
+.customer-display .timer-text {
+    color: var(--customer-display-text);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.customer-display .timer-label {
+    color: var(--customer-display-accent);
+}
+
+.customer-display .timer-status {
+    color: var(--customer-display-text);
+}
+
+.customer-display .progress-ring-circle {
+    stroke: var(--customer-display-accent);
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .countdown-timer-container {
+        border-width: var(--border-width-2);
+    }
+    
+    .timer-text {
+        font-weight: var(--font-weight-extrabold);
+    }
+    
+    .progress-ring-circle {
+        stroke-width: 6;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .countdown-timer-container.critical {
+        animation: none;
+    }
+    
+    .countdown-timer-container.critical .timer-text {
+        animation: none;
+    }
+    
+    .progress-ring-circle {
+        transition: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .countdown-timer-container {
+        box-shadow: none;
+        border: var(--border-width-1) solid var(--color-gray-400);
+        background: transparent;
+    }
+    
+    .timer-text {
+        color: var(--color-black) !important;
+    }
+    
+    .progress-ring {
+        display: none;
+    }
+}
+
+/* Dark Theme Adjustments */
+@media (prefers-color-scheme: dark) {
+    .countdown-timer-container.warning {
+        background: rgba(243, 156, 18, 0.1);
+    }
+    
+    .countdown-timer-container.critical {
+        background: rgba(231, 76, 60, 0.1);
+    }
+    
+    .countdown-timer-container.expired {
+        background: rgba(52, 58, 64, 0.1);
+    }
+}

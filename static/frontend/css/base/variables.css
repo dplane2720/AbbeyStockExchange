@@ -1,0 +1,317 @@
+/**
+ * Abbey Stock Exchange v5 - CSS Custom Properties
+ * 
+ * Global design tokens and CSS custom properties for consistent theming,
+ * responsive design, and component styling across the application.
+ */
+
+:root {
+    /* Color Palette */
+    --color-primary: #2c3e50;
+    --color-primary-dark: #1a252f;
+    --color-primary-light: #34495e;
+    --color-secondary: #3498db;
+    --color-secondary-dark: #2980b9;
+    --color-secondary-light: #5dade2;
+    
+    /* Status Colors */
+    --color-success: #27ae60;
+    --color-success-dark: #229954;
+    --color-success-light: #58d68d;
+    --color-warning: #f39c12;
+    --color-warning-dark: #e67e22;
+    --color-warning-light: #f8c471;
+    --color-danger: #e74c3c;
+    --color-danger-dark: #c0392b;
+    --color-danger-light: #ec7063;
+    --color-info: #17a2b8;
+    --color-info-dark: #138496;
+    --color-info-light: #5bc0de;
+    
+    /* Neutral Colors */
+    --color-white: #ffffff;
+    --color-light: #f8f9fa;
+    --color-gray-100: #f1f3f4;
+    --color-gray-200: #e9ecef;
+    --color-gray-300: #dee2e6;
+    --color-gray-400: #ced4da;
+    --color-gray-500: #adb5bd;
+    --color-gray-600: #6c757d;
+    --color-gray-700: #495057;
+    --color-gray-800: #343a40;
+    --color-gray-900: #212529;
+    --color-dark: #212529;
+    --color-black: #000000;
+    
+    /* Trend Colors */
+    --color-trend-up: var(--color-success);
+    --color-trend-down: var(--color-danger);
+    --color-trend-stable: var(--color-gray-600);
+    
+    /* Background Colors */
+    --bg-primary: var(--color-white);
+    --bg-secondary: var(--color-light);
+    --bg-dark: var(--color-dark);
+    --bg-overlay: rgba(0, 0, 0, 0.6);
+    --bg-backdrop: rgba(0, 0, 0, 0.5);
+    
+    /* Text Colors */
+    --text-primary: var(--color-gray-900);
+    --text-secondary: var(--color-gray-600);
+    --text-muted: var(--color-gray-500);
+    --text-light: var(--color-white);
+    --text-inverse: var(--color-white);
+    
+    /* Typography */
+    --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-family-monospace: "SF Mono", Monaco, Inconsolata, "Roboto Mono", "Droid Sans Mono", "Liberation Mono", Menlo, Courier, monospace;
+    
+    --font-size-xs: 0.75rem;    /* 12px */
+    --font-size-sm: 0.875rem;   /* 14px */
+    --font-size-base: 1rem;     /* 16px */
+    --font-size-lg: 1.125rem;   /* 18px */
+    --font-size-xl: 1.25rem;    /* 20px */
+    --font-size-2xl: 1.5rem;    /* 24px */
+    --font-size-3xl: 1.875rem;  /* 30px */
+    --font-size-4xl: 2.25rem;   /* 36px */
+    --font-size-5xl: 3rem;      /* 48px */
+    --font-size-6xl: 3.75rem;   /* 60px */
+    
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    
+    --line-height-none: 1;
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.625;
+    --line-height-loose: 2;
+    
+    /* Spacing Scale */
+    --space-0: 0;
+    --space-1: 0.25rem;   /* 4px */
+    --space-2: 0.5rem;    /* 8px */
+    --space-3: 0.75rem;   /* 12px */
+    --space-4: 1rem;      /* 16px */
+    --space-5: 1.25rem;   /* 20px */
+    --space-6: 1.5rem;    /* 24px */
+    --space-8: 2rem;      /* 32px */
+    --space-10: 2.5rem;   /* 40px */
+    --space-12: 3rem;     /* 48px */
+    --space-16: 4rem;     /* 64px */
+    --space-20: 5rem;     /* 80px */
+    --space-24: 6rem;     /* 96px */
+    --space-32: 8rem;     /* 128px */
+    
+    /* Border Radius */
+    --border-radius-none: 0;
+    --border-radius-sm: 0.125rem;  /* 2px */
+    --border-radius-base: 0.25rem; /* 4px */
+    --border-radius-md: 0.375rem;  /* 6px */
+    --border-radius-lg: 0.5rem;    /* 8px */
+    --border-radius-xl: 0.75rem;   /* 12px */
+    --border-radius-2xl: 1rem;     /* 16px */
+    --border-radius-3xl: 1.5rem;   /* 24px */
+    --border-radius-full: 9999px;
+    
+    /* Border Width */
+    --border-width-0: 0;
+    --border-width-1: 1px;
+    --border-width-2: 2px;
+    --border-width-4: 4px;
+    --border-width-8: 8px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+    --shadow-none: none;
+    
+    /* Animation Timing */
+    --duration-75: 75ms;
+    --duration-100: 100ms;
+    --duration-150: 150ms;
+    --duration-200: 200ms;
+    --duration-300: 300ms;
+    --duration-500: 500ms;
+    --duration-700: 700ms;
+    --duration-1000: 1000ms;
+    
+    /* Animation Easing */
+    --ease-linear: linear;
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Z-Index Scale */
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-modal-backdrop: 1040;
+    --z-index-modal: 1050;
+    --z-index-popover: 1060;
+    --z-index-tooltip: 1070;
+    --z-index-toast: 1080;
+    
+    /* Breakpoints */
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-xxl: 1400px;
+    
+    /* Container Max Widths */
+    --container-sm: 540px;
+    --container-md: 720px;
+    --container-lg: 960px;
+    --container-xl: 1140px;
+    --container-xxl: 1320px;
+    
+    /* Touch Targets */
+    --touch-target-min: 44px;  /* iOS Human Interface Guidelines */
+    --touch-target-comfortable: 48px;
+    --touch-target-large: 56px;
+    
+    /* Component Specific Variables */
+    
+    /* Buttons */
+    --btn-padding-y: var(--space-3);
+    --btn-padding-x: var(--space-6);
+    --btn-padding-y-sm: var(--space-2);
+    --btn-padding-x-sm: var(--space-4);
+    --btn-padding-y-lg: var(--space-4);
+    --btn-padding-x-lg: var(--space-8);
+    --btn-border-radius: var(--border-radius-md);
+    --btn-font-weight: var(--font-weight-medium);
+    --btn-line-height: var(--line-height-tight);
+    
+    /* Cards */
+    --card-padding: var(--space-6);
+    --card-padding-sm: var(--space-4);
+    --card-padding-lg: var(--space-8);
+    --card-border-radius: var(--border-radius-lg);
+    --card-bg: var(--bg-primary);
+    --card-border-color: var(--color-gray-200);
+    --card-shadow: var(--shadow-base);
+    
+    /* Modals */
+    --modal-backdrop-bg: var(--bg-backdrop);
+    --modal-content-bg: var(--bg-primary);
+    --modal-content-border-radius: var(--border-radius-lg);
+    --modal-content-shadow: var(--shadow-xl);
+    --modal-header-padding: var(--space-6);
+    --modal-body-padding: var(--space-6);
+    --modal-footer-padding: var(--space-6);
+    
+    /* Forms */
+    --form-control-padding-y: var(--space-3);
+    --form-control-padding-x: var(--space-4);
+    --form-control-border-radius: var(--border-radius-md);
+    --form-control-border-color: var(--color-gray-300);
+    --form-control-focus-border-color: var(--color-secondary);
+    --form-control-bg: var(--bg-primary);
+    
+    /* Navigation */
+    --nav-link-padding-y: var(--space-3);
+    --nav-link-padding-x: var(--space-4);
+    --nav-link-font-weight: var(--font-weight-medium);
+    
+    /* Transitions */
+    --transition-base: all var(--duration-200) var(--ease-in-out);
+    --transition-fade: opacity var(--duration-150) var(--ease-linear);
+    --transition-collapse: height var(--duration-200) var(--ease-in-out);
+    --transition-color: color var(--duration-150) var(--ease-in-out), 
+                        background-color var(--duration-150) var(--ease-in-out), 
+                        border-color var(--duration-150) var(--ease-in-out);
+    
+    /* App Specific Variables */
+    
+    /* Price Display */
+    --price-font-family: var(--font-family-monospace);
+    --price-font-weight: var(--font-weight-bold);
+    --price-trend-up-color: var(--color-trend-up);
+    --price-trend-down-color: var(--color-trend-down);
+    --price-trend-stable-color: var(--color-trend-stable);
+    
+    /* Countdown Timer */
+    --timer-font-family: var(--font-family-monospace);
+    --timer-font-weight: var(--font-weight-bold);
+    --timer-font-size: var(--font-size-3xl);
+    --timer-color-normal: var(--text-primary);
+    --timer-color-warning: var(--color-warning);
+    --timer-color-critical: var(--color-danger);
+    
+    /* Drink Buttons */
+    --drink-button-padding: var(--space-6);
+    --drink-button-border-radius: var(--border-radius-xl);
+    --drink-button-min-height: var(--touch-target-large);
+    --drink-button-shadow: var(--shadow-md);
+    --drink-button-shadow-hover: var(--shadow-lg);
+    
+    /* Customer Display */
+    --customer-display-bg: var(--color-dark);
+    --customer-display-text: var(--text-light);
+    --customer-display-accent: var(--color-secondary);
+    
+    /* Admin Interface */
+    --admin-bg: var(--bg-secondary);
+    --admin-header-bg: var(--color-primary);
+    --admin-header-text: var(--text-light);
+    --admin-card-bg: var(--bg-primary);
+}
+
+/* Dark theme variables (optional) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: var(--color-gray-800);
+        --bg-secondary: var(--color-gray-900);
+        --text-primary: var(--color-gray-100);
+        --text-secondary: var(--color-gray-300);
+        --text-muted: var(--color-gray-400);
+        --card-bg: var(--color-gray-800);
+        --card-border-color: var(--color-gray-700);
+        --form-control-bg: var(--color-gray-700);
+        --form-control-border-color: var(--color-gray-600);
+        --modal-content-bg: var(--color-gray-800);
+    }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --duration-75: 0ms;
+        --duration-100: 0ms;
+        --duration-150: 0ms;
+        --duration-200: 0ms;
+        --duration-300: 0ms;
+        --duration-500: 0ms;
+        --duration-700: 0ms;
+        --duration-1000: 0ms;
+        
+        --transition-base: none;
+        --transition-fade: none;
+        --transition-collapse: none;
+        --transition-color: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --color-primary: #000000;
+        --color-secondary: #0066cc;
+        --text-primary: #000000;
+        --text-secondary: #000000;
+        --border-width-1: 2px;
+        --border-width-2: 3px;
+    }
+}

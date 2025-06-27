@@ -1,0 +1,35 @@
+# Abbey Stock Exchange v5 - Full-Featured Implementation
+# Flask RESTful API with WebSocket support and modern frontend
+
+# Core Flask framework
+Flask==2.3.3
+Flask-RESTful==0.3.10
+Flask-SocketIO==5.3.6
+
+# Data validation and serialization
+marshmallow==3.20.1
+PyYAML==6.0.1
+
+# Scheduling and background tasks
+APScheduler==3.10.4
+
+# WebSocket support
+python-socketio==5.9.0
+eventlet==0.33.3
+
+# Production WSGI server
+gunicorn==21.2.0
+
+# Development and testing
+pytest==7.4.2
+pytest-flask==1.3.0
+# pytest-socketio==0.2.0  # Not available, will use manual testing
+coverage==7.3.2
+
+# Code quality
+flake8==6.1.0
+black==23.9.1
+
+# Utilities
+python-dotenv==1.0.0
+click==8.1.7

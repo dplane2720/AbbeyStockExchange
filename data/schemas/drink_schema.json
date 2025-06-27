@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "minimum_price",
+    "current_price",
+    "price_step_size",
+    "list_position",
+    "trend"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "minimum_price": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 999.99
+    },
+    "current_price": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 999.99
+    },
+    "price_step_size": {
+      "type": "number",
+      "minimum": 0.01,
+      "maximum": 99.99
+    },
+    "list_position": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "trend": {
+      "type": "string",
+      "enum": [
+        "increasing",
+        "stable",
+        "decreasing"
+      ]
+    }
+  }
+}

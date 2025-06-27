@@ -1,0 +1,524 @@
+/**
+ * Abbey Stock Exchange v5 - Button Components
+ * 
+ * Comprehensive button system with variants, sizes, states,
+ * and touch optimizations for all interface elements.
+ */
+
+/* Base Button Styles */
+.btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    
+    min-height: var(--touch-target-min);
+    padding: var(--btn-padding-y) var(--btn-padding-x);
+    
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    font-weight: var(--btn-font-weight);
+    line-height: var(--btn-line-height);
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    vertical-align: middle;
+    
+    background: var(--color-white);
+    color: var(--text-primary);
+    border: var(--border-width-1) solid var(--color-gray-300);
+    border-radius: var(--btn-border-radius);
+    
+    cursor: pointer;
+    user-select: none;
+    
+    transition: var(--transition-base);
+    outline: none;
+    
+    /* Touch optimization */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.btn:hover {
+    color: var(--text-primary);
+    background: var(--color-gray-100);
+    border-color: var(--color-gray-400);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn:focus {
+    color: var(--text-primary);
+    background: var(--color-gray-100);
+    border-color: var(--color-secondary);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+}
+
+.btn:active {
+    color: var(--text-primary);
+    background: var(--color-gray-200);
+    border-color: var(--color-gray-400);
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn:disabled,
+.btn.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    transform: none !important;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Button Variants */
+.btn-primary {
+    color: var(--text-light);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+    color: var(--text-light);
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
+
+.btn-primary:focus {
+    color: var(--text-light);
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.25);
+}
+
+.btn-primary:active {
+    color: var(--text-light);
+    background: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+    color: var(--text-light);
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.btn-secondary:hover {
+    color: var(--text-light);
+    background: var(--color-secondary-dark);
+    border-color: var(--color-secondary-dark);
+}
+
+.btn-secondary:focus {
+    color: var(--text-light);
+    background: var(--color-secondary-dark);
+    border-color: var(--color-secondary-dark);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+}
+
+.btn-secondary:active {
+    color: var(--text-light);
+    background: var(--color-secondary-dark);
+    border-color: var(--color-secondary-dark);
+}
+
+.btn-success {
+    color: var(--text-light);
+    background: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.btn-success:hover {
+    color: var(--text-light);
+    background: var(--color-success-dark);
+    border-color: var(--color-success-dark);
+}
+
+.btn-success:focus {
+    color: var(--text-light);
+    background: var(--color-success-dark);
+    border-color: var(--color-success-dark);
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.25);
+}
+
+.btn-success:active {
+    color: var(--text-light);
+    background: var(--color-success-dark);
+    border-color: var(--color-success-dark);
+}
+
+.btn-danger {
+    color: var(--text-light);
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.btn-danger:hover {
+    color: var(--text-light);
+    background: var(--color-danger-dark);
+    border-color: var(--color-danger-dark);
+}
+
+.btn-danger:focus {
+    color: var(--text-light);
+    background: var(--color-danger-dark);
+    border-color: var(--color-danger-dark);
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25);
+}
+
+.btn-danger:active {
+    color: var(--text-light);
+    background: var(--color-danger-dark);
+    border-color: var(--color-danger-dark);
+}
+
+.btn-warning {
+    color: var(--color-gray-900);
+    background: var(--color-warning);
+    border-color: var(--color-warning);
+}
+
+.btn-warning:hover {
+    color: var(--color-gray-900);
+    background: var(--color-warning-dark);
+    border-color: var(--color-warning-dark);
+}
+
+.btn-warning:focus {
+    color: var(--color-gray-900);
+    background: var(--color-warning-dark);
+    border-color: var(--color-warning-dark);
+    box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.25);
+}
+
+.btn-warning:active {
+    color: var(--color-gray-900);
+    background: var(--color-warning-dark);
+    border-color: var(--color-warning-dark);
+}
+
+.btn-info {
+    color: var(--text-light);
+    background: var(--color-info);
+    border-color: var(--color-info);
+}
+
+.btn-info:hover {
+    color: var(--text-light);
+    background: var(--color-info-dark);
+    border-color: var(--color-info-dark);
+}
+
+.btn-info:focus {
+    color: var(--text-light);
+    background: var(--color-info-dark);
+    border-color: var(--color-info-dark);
+    box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
+}
+
+.btn-info:active {
+    color: var(--text-light);
+    background: var(--color-info-dark);
+    border-color: var(--color-info-dark);
+}
+
+/* Outline Button Variants */
+.btn-outline-primary {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-outline-primary:hover {
+    color: var(--text-light);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-outline-secondary {
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.btn-outline-secondary:hover {
+    color: var(--text-light);
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.btn-outline-success {
+    color: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.btn-outline-success:hover {
+    color: var(--text-light);
+    background: var(--color-success);
+    border-color: var(--color-success);
+}
+
+.btn-outline-danger {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.btn-outline-danger:hover {
+    color: var(--text-light);
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+/* Ghost Button Variants */
+.btn-ghost {
+    background: transparent;
+    border-color: transparent;
+}
+
+.btn-ghost:hover {
+    background: var(--color-gray-100);
+}
+
+.btn-ghost-primary {
+    color: var(--color-primary);
+    background: transparent;
+    border-color: transparent;
+}
+
+.btn-ghost-primary:hover {
+    background: rgba(44, 62, 80, 0.1);
+}
+
+/* Button Sizes */
+.btn-xs {
+    min-height: calc(var(--touch-target-min) * 0.7);
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--font-size-xs);
+}
+
+.btn-sm {
+    min-height: calc(var(--touch-target-min) * 0.85);
+    padding: var(--btn-padding-y-sm) var(--btn-padding-x-sm);
+    font-size: var(--font-size-sm);
+}
+
+.btn-lg {
+    min-height: var(--touch-target-comfortable);
+    padding: var(--btn-padding-y-lg) var(--btn-padding-x-lg);
+    font-size: var(--font-size-lg);
+}
+
+.btn-xl {
+    min-height: var(--touch-target-large);
+    padding: var(--space-5) var(--space-10);
+    font-size: var(--font-size-xl);
+}
+
+/* Button Block */
+.btn-block {
+    display: flex;
+    width: 100%;
+}
+
+/* Button Groups */
+.btn-group {
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.btn-group > .btn {
+    position: relative;
+    flex: 1 1 auto;
+}
+
+.btn-group > .btn:not(:first-child) {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.btn-group > .btn:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.btn-group > .btn:hover,
+.btn-group > .btn:focus,
+.btn-group > .btn:active {
+    z-index: 1;
+}
+
+/* Loading States */
+.btn-loading {
+    pointer-events: none;
+    position: relative;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: btn-loading-spin 1s linear infinite;
+}
+
+.btn-loading .btn-text {
+    opacity: 0;
+}
+
+/* Button Icons */
+.btn-icon {
+    padding: var(--space-3);
+    min-width: var(--touch-target-min);
+}
+
+.btn-icon-left {
+    padding-left: calc(var(--btn-padding-x) - var(--space-1));
+}
+
+.btn-icon-right {
+    padding-right: calc(var(--btn-padding-x) - var(--space-1));
+}
+
+/* Special Button Types */
+.btn-close {
+    box-sizing: content-box;
+    width: 1em;
+    height: 1em;
+    padding: 0.25em 0.25em;
+    color: var(--color-black);
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='m.235.007l15.481 15.966-.943.948L-.708.954z'/%3e%3cpath d='M14.903.007L-.012 15.966l.943.948L15.846.954z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    border: 0;
+    border-radius: 0.25rem;
+    opacity: 0.5;
+}
+
+.btn-close:hover {
+    color: var(--color-black);
+    text-decoration: none;
+    opacity: 0.75;
+}
+
+.btn-close:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    opacity: 1;
+}
+
+.btn-close:disabled {
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.25;
+}
+
+/* Touch Device Optimizations */
+@media (pointer: coarse) {
+    .btn {
+        min-height: var(--touch-target-comfortable);
+    }
+    
+    .btn-sm {
+        min-height: var(--touch-target-min);
+    }
+    
+    .btn-lg {
+        min-height: var(--touch-target-large);
+    }
+    
+    .btn:hover {
+        transform: none;
+        box-shadow: var(--shadow-base);
+    }
+    
+    .btn:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .btn-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-group > .btn {
+        margin-left: 0;
+        margin-top: -1px;
+        border-radius: var(--btn-border-radius);
+    }
+    
+    .btn-group > .btn:not(:first-child) {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-top: -1px;
+    }
+    
+    .btn-group > .btn:not(:last-child) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+/* Animations */
+@keyframes btn-loading-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .btn {
+        border-width: var(--border-width-2);
+    }
+    
+    .btn:focus {
+        outline: var(--border-width-2) solid;
+        outline-offset: 2px;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+    
+    .btn:active {
+        transform: none;
+    }
+    
+    .btn-loading::after {
+        animation: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .btn {
+        border: var(--border-width-1) solid var(--color-black);
+        background: transparent !important;
+        color: var(--color-black) !important;
+        box-shadow: none;
+    }
+    
+    .btn:hover,
+    .btn:focus,
+    .btn:active {
+        transform: none;
+        box-shadow: none;
+    }
+}

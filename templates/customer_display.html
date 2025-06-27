@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Abbey Stock Exchange - Customer Display{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/pages/customer-display.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="customer-display">
+    <header class="display-header">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='frontend/assets/abbey-logo.png') }}" 
+                 alt="Abbey Bar" class="venue-logo">
+        </div>
+    </header>
+    
+    <main class="drinks-grid" id="drinks-display">
+        <!-- Drink items will be populated by JavaScript -->
+        <div class="loading-state">
+            <p>Loading drink prices...</p>
+        </div>
+    </main>
+    
+    <footer class="display-footer">
+        <div class="footer-timer" id="footer-timer">
+            <span class="timer-label">Next Update:</span>
+            <span class="timer-value" id="footer-timer-display">0:25</span>
+            <span class="timer-message">Buy now before prices change!</span>
+        </div>
+    </footer>
+    
+    <!-- Connection Status -->
+    <div class="connection-status connected" id="connection-status"></div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<!-- Page script -->
+<script src="{{ url_for('static', filename='frontend/js/pages/customer-display.js') }}"></script>
+
+<script>
+    // Initialize customer display when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        window.CustomerDisplay.init();
+    });
+</script>
+{% endblock %}
