@@ -17,13 +17,13 @@
 #
 
 # Configuration variables - modify these for your specific repository and application
-REPO_URL="https://github.com/dplane2720/AbbeyStockExchange.git"  # Replace with your repo URL
-LOCAL_PATH="/home/$USER/AbbeyStockExchange"  # Local clone destination
-BRANCH="main"  # Branch to monitor (main, master, develop, etc.)
+REPO_URL="https://github.com/dplane2720/AbbeyStockExchange.git"
+LOCAL_PATH="/home/$USER/AbbeyStockExchange"
+BRANCH="main"
 LOG_FILE="/var/log/git-repo-monitor.log"
 
 # Application launch configuration
-APP_SCRIPT="$LOCAL_PATH/AbbeyStockExchange/app.sh"  # Path to your app startup script
+APP_SCRIPT="$LOCAL_PATH/start_app.sh"  # Path to your app startup script
 APP_WORKING_DIR="$LOCAL_PATH"  # Working directory for app execution
 LAUNCH_APP=true  # Set to false to disable app launch
 APP_USER="$(whoami)"  # User to run the app as
@@ -36,6 +36,34 @@ log_message() {
 # Function to get remote commit hash
 get_remote_hash() {
     git ls-remote "$REPO_URL" "refs/heads/$BRANCH" | cut -f1
+}
+
+# Function to get local commit hash
+get_local_hash() {
+    if [ -d "$LOCAL_PATH/.git" ]; then
+        cd "$LOCAL_PATH"
+        git rev-parse HEAD
+    else
+        echo "no_local_repo"
+    fi
+}
+
+# Function to stop existing application
+stop_existing_app() {
+    if [ -f "/var/run/monitored-app.pid" ]; then
+        OLD_PID=$(cat /var/run/monitored-app.pid)
+        if kill -0 "$OLD_PID" 2>/dev/null; then
+            log_message "Stopping existing application with PID $OLD_PID"
+            kill "$OLD_PID"
+            sleep 3
+            # Force kill if still running
+            if kill -0 "$OLD_PID" 2>/dev/null; then
+                log_message "Force stopping application with PID $OLD_PID"
+                kill -9 "$OLD_PID"
+            fi
+        fi
+        rm -f /var/run/monitored-app.pid
+    fi
 }
 
 # Function to launch application
@@ -72,14 +100,6 @@ launch_application() {
         fi
     else
         log_message "Application launch disabled (LAUNCH_APP=false)"
-    fi
-}
-get_local_hash() {
-    if [ -d "$LOCAL_PATH/.git" ]; then
-        cd "$LOCAL_PATH"
-        git rev-parse HEAD
-    else
-        echo "no_local_repo"
     fi
 }
 

@@ -5,13 +5,13 @@
 # 
 # Function: Installs and configures the git repository boot check service
 # 
-# Usage: sudo ./setup-git-monitor.sh
+# Usage: sudo ./setup.sh
 # 
 # Date created: 2025-06-30
 # 
 # Change Log:
 # • 2025-06-30: Initial setup script for systemd service installation
-# • 2025-06-30: Simplified for boot-only execution on Raspberry Pi
+# • 2025-06-30: Simplified for boot-only execution on Orange Pi
 #
 
 # Copy script to system location
@@ -34,11 +34,17 @@ sudo chown $USER:$USER /var/run/monitored-app.pid 2>/dev/null || true
 # Reload systemd daemon
 sudo systemctl daemon-reload
 
+# Enable the service to run at boot (no timer needed)
+sudo systemctl enable git-repo-monitor.service
+
 echo "Git repository boot monitor with app launcher installed successfully!"
 echo "Service will run once at each boot and launch your application."
+echo ""
+echo "IMPORTANT: Make sure your repository contains 'start_app.sh' at the root level"
+echo ""
 echo "To manually run: sudo systemctl start git-repo-monitor.service"
 echo "To check status: systemctl status git-repo-monitor.service"
 echo "To view logs: journalctl -u git-repo-monitor.service"
-
-# Enable the service to run at boot (no timer needed)
-sudo systemctl enable git-repo-monitor.service
+echo "To check log files:"
+echo "  - Repository monitor: tail -f /var/log/git-repo-monitor.log"
+echo "  - Application output: tail -f /var/log/app-output.log"
