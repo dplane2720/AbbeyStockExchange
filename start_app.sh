@@ -70,7 +70,7 @@ if wait_for_desktop; then
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Launching Chromium browser..."
     
     # Run browser as the desktop user (usually orangepi)
-    sudo -u orangepi DISPLAY=:0 chromium-browser \
+    sudo -u orangepi DISPLAY=:0 chromium \
         --no-first-run \
         --disable-translate \
         --disable-infobars \
