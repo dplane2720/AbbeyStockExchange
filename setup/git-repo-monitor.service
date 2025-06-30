@@ -1,16 +1,16 @@
 [Unit]
 Description=Git Repository Boot Check Service
-After=network-online.target
+After=graphical-session.target
 Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=orangepi
-Group=orangepi
+Environment="DISPLAY=:0"
+Environment="XDG_RUNTIME_DIR=/run/user/1000"
 ExecStart=/usr/local/bin/git-repo-monitor.sh
 StandardOutput=journal
 StandardError=journal
 RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
