@@ -13,16 +13,17 @@
 # 
 # Change Log:
 # • 2025-06-30: Initial script creation with remote hash comparison logic
+# • 2025-06-30: Modified for boot-only execution to minimize Pi resource usage
 #
 
-# Configuration variables - modify these for your specific repository
-REPO_URL="https://github.com/dplane2720/AbbeyStockExchange.git"  # Replace with your repo URL
-LOCAL_PATH="/home/orangepi/monitored-AbbeyStockExchange/"  # Local clone destination
+# Configuration variables - modify these for your specific repository and application
+REPO_URL="https://github.com/username/repository.git"  # Replace with your repo URL
+LOCAL_PATH="/home/$(whoami)/monitored-repos/repository"  # Local clone destination
 BRANCH="main"  # Branch to monitor (main, master, develop, etc.)
 LOG_FILE="/var/log/git-repo-monitor.log"
 
 # Application launch configuration
-APP_SCRIPT="$LOCAL_PATH/app_startup_script.sh"  # Path to your app startup script
+APP_SCRIPT="$LOCAL_PATH/start_app.sh"  # Path to your app startup script
 APP_WORKING_DIR="$LOCAL_PATH"  # Working directory for app execution
 LAUNCH_APP=true  # Set to false to disable app launch
 APP_USER="$(whoami)"  # User to run the app as

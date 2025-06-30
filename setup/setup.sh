@@ -11,28 +11,34 @@
 # 
 # Change Log:
 # • 2025-06-30: Initial setup script for systemd service installation
+# • 2025-06-30: Simplified for boot-only execution on Raspberry Pi
 #
 
 # Copy script to system location
 sudo cp git-repo-monitor.sh /usr/local/bin/
 sudo chmod +x /usr/local/bin/git-repo-monitor.sh
 
-# Copy systemd service file only (no timer needed)
+# Copy systemd service file 
 sudo cp git-repo-monitor.service /etc/systemd/system/
 
-# Create log file with proper permissions
+# Create log files with proper permissions
 sudo touch /var/log/git-repo-monitor.log
+sudo touch /var/log/app-output.log
 sudo chown $USER:$USER /var/log/git-repo-monitor.log
+sudo chown $USER:$USER /var/log/app-output.log
+
+# Create PID file directory if it doesn't exist
+sudo mkdir -p /var/run
+sudo chown $USER:$USER /var/run/monitored-app.pid 2>/dev/null || true
 
 # Reload systemd daemon
 sudo systemctl daemon-reload
 
-# Enable the service to run at boot (no timer needed)
-sudo systemctl enable git-repo-monitor.service
-
-echo "Git repository boot monitor service installed successfully!"
-echo "Service will run once at each boot."
+echo "Git repository boot monitor with app launcher installed successfully!"
+echo "Service will run once at each boot and launch your application."
 echo "To manually run: sudo systemctl start git-repo-monitor.service"
 echo "To check status: systemctl status git-repo-monitor.service"
 echo "To view logs: journalctl -u git-repo-monitor.service"
-echo "To check log file: tail -f /var/log/git-repo-monitor.log"
+
+# Enable the service to run at boot (no timer needed)
+sudo systemctl enable git-repo-monitor.service
