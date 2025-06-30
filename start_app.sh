@@ -13,11 +13,29 @@
 # • 2025-06-30: Initial application startup script template
 # • 2025-06-30: Configured for Python app with virtual environment
 # • 2025-06-30: Added Chromium browser launch for kiosk mode
+# • 2025-06-30: Added desktop session detection for GUI applications
 #
 
-# Set up environment variables if needed
+# Set up environment variables
 export PATH=$PATH:/usr/local/bin
-export DISPLAY=:0  # Required for GUI applications
+
+# Function to wait for desktop session
+wait_for_desktop() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Waiting for desktop session..."
+    
+    # Wait up to 60 seconds for X server to be available
+    for i in {1..60}; do
+        if xset q &>/dev/null 2>&1; then
+            echo "$(date '+%Y-%m-%d %H:%M:%S') - Desktop session detected"
+            export DISPLAY=:0
+            return 0
+        fi
+        sleep 1
+    done
+    
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - WARNING: No desktop session found, browser will not launch"
+    return 1
+}
 
 # Log startup
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting Python application from $(pwd)"
@@ -47,23 +65,31 @@ if ! kill -0 $APP_PID 2>/dev/null; then
     exit 1
 fi
 
-# Launch Chromium browser in kiosk mode
-echo "$(date '+%Y-%m-%d %H:%M:%S') - Launching Chromium browser..."
-chromium-browser \
-    --no-first-run \
-    --disable-translate \
-    --disable-infobars \
-    --disable-suggestions-service \
-    --disable-save-password-bubble \
-    --start-maximized \
-    --kiosk \
-    --disable-session-crashed-bubble \
-    --incognito \
-    --no-sandbox \
-    --disable-dev-shm-usage \
-    http://127.0.0.1:5000 &  # Adjust port if needed
-
-BROWSER_PID=$!
+# Wait for desktop session and launch browser if available
+if wait_for_desktop; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Launching Chromium browser..."
+    
+    # Run browser as the desktop user (usually orangepi)
+    sudo -u orangepi DISPLAY=:0 chromium-browser \
+        --no-first-run \
+        --disable-translate \
+        --disable-infobars \
+        --disable-suggestions-service \
+        --disable-save-password-bubble \
+        --start-maximized \
+        --kiosk \
+        --disable-session-crashed-bubble \
+        --incognito \
+        --no-sandbox \
+        --disable-dev-shm-usage \
+        http://127.0.0.1:5000 &
+    
+    BROWSER_PID=$!
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Browser launched with PID: $BROWSER_PID"
+else
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Skipping browser launch - no desktop session"
+    BROWSER_PID="N/A"
+fi
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Application started successfully!"
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Python app PID: $APP_PID"
