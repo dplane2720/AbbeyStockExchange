@@ -37,4 +37,21 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Activating virtual environment..."
 source venv/bin/activate
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting Python application (app.py)..."
-python app.py
+python app.py &
+
+# Launch Chromium browser in kiosk mode
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Launching Chromium browser..."
+chromium-browser \
+    --no-first-run \
+    --disable-translate \
+    --disable-infobars \
+    --disable-suggestions-service \
+    --disable-save-password-bubble \
+    --start-maximized \
+    --kiosk \
+    --disable-session-crashed-bubble \
+    --incognito \
+    --no-sandbox \
+    --disable-dev-shm-usage \
+    http://127.0.0.1:5001/display &  # Adjust port if needed
+
