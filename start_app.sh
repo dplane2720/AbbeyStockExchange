@@ -119,7 +119,7 @@ if is_browser_running; then
     BROWSER_PID="existing"
 else
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Launching Chromium browser..."
-    chromium-browser \
+    chromium \
         --no-first-run \
         --disable-translate \
         --disable-infobars \
