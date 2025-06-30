@@ -1,16 +1,17 @@
 [Unit]
-Description=Git Repository Boot Check Service
-After=graphical-session.target
+Description=Abbey Stock Exchange Startup Service
+After=network-online.target
 Wants=network-online.target
 
 [Service]
-Type=oneshot
-Environment="DISPLAY=:0"
-Environment="XDG_RUNTIME_DIR=/run/user/1000"
-ExecStart=/usr/local/bin/git-repo-monitor.sh
+Type=forking
+User=orangepi
+Group=orangepi
+WorkingDirectory=/home/orangepi/AbbeyStockExchange
+ExecStart=/home/orangepi/AbbeyStockExchange/start_app.sh
 StandardOutput=journal
 StandardError=journal
 RemainAfterExit=yes
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
