@@ -190,7 +190,7 @@ class BackupManager:
             
             # Check YAML structure
             try:
-                backup_data = self.data_manager.load_backup_file(backup_path)
+                backup_data = self._validate_backup_file_directly(backup_path)
                 verification_checks['yaml_structure'] = {
                     'passed': True,
                     'description': 'Valid YAML structure'
@@ -531,6 +531,36 @@ class BackupManager:
         except Exception as e:
             logger.warning(f"Failed to save backup metadata: {e}")
     
+    def _validate_backup_file_directly(self, backup_path: str) -> Dict[str, Any]:
+        """
+        Validate backup file by directly loading and parsing YAML.
+        
+        Args:
+            backup_path: Path to backup file to validate
+            
+        Returns:
+            Dict containing backup data if valid
+            
+        Raises:
+            Exception: If backup file is invalid or corrupted
+        """
+        import yaml
+        from core.data_manager import OrderedDictYAMLLoader
+        
+        with open(backup_path, 'r') as f:
+            backup_data = yaml.load(f, Loader=OrderedDictYAMLLoader)
+        
+        # Basic validation - ensure it's a dictionary with required keys
+        if not isinstance(backup_data, dict):
+            raise ValueError("Backup file does not contain valid YAML dictionary")
+        
+        required_keys = ['backup_name', 'backup_date', 'backup_version', 'settings', 'drinks']
+        missing_keys = [key for key in required_keys if key not in backup_data]
+        if missing_keys:
+            raise ValueError(f"Backup file missing required keys: {missing_keys}")
+        
+        return backup_data
+    
     def _load_backup_metadata(self, backup_name: str) -> Optional[Dict[str, Any]]:
         """Load backup metadata from file."""
         try:
@@ -551,7 +581,7 @@ class BackupManager:
                 return False
             
             # Try to load as YAML
-            self.data_manager.load_backup_file(backup_path)
+            self._validate_backup_file_directly(backup_path)
             return True
         except:
             return False

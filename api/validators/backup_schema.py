@@ -125,6 +125,14 @@ class BackupSettingsSchema(Schema):
     )
     
     auto_backup_enabled = fields.Boolean(load_default=True)
+    backup_retention_days = fields.Integer(
+        load_default=30,
+        validate=validate.Range(min=1, max=365)
+    )
+    max_concurrent_users = fields.Integer(
+        load_default=10,
+        validate=validate.Range(min=1, max=100)
+    )
 
 
 class BackupDrinkSchema(Schema):

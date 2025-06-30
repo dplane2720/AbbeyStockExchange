@@ -709,6 +709,12 @@ window.ModalManager = (function() {
             </div>
             <div class="modal-body app-settings-modal">
                 <form class="settings-form">
+                    <div class="form-group">
+                        <label for="display-title">Display Title:</label>
+                        <input type="text" id="display-title" name="display_title" 
+                               value="${settings.display_title || 'Abbey Stock Exchange'}" maxlength="100" required>
+                    </div>
+                    
                     <div class="form-group checkbox-inline">
                         <label for="sound-enabled">Sound Enabled:</label>
                         <input type="checkbox" id="sound-enabled" name="sound_enabled" 
@@ -724,7 +730,7 @@ window.ModalManager = (function() {
                     <div class="form-group">
                         <label for="refresh-cycle">Price Refresh Cycle (30 - 3600 seconds):</label>
                         <input type="number" id="refresh-cycle" name="refresh_cycle" 
-                               value="${settings.refresh_cycle || 30}" min="30" max="3600" required>
+                               value="${settings.refresh_cycle || 30}" min="30" max="3600" step="30" required>
                     </div>
                     
                     <div class="form-group">
@@ -1058,6 +1064,9 @@ window.ModalManager = (function() {
                     backup_retention_days: parseInt(formData.get('backup_retention_days'))
                 };
                 
+                // Debug logging
+                console.log('[AppSettings] Form data collected:', settings);
+                
                 try {
                     saveBtn.disabled = true;
                     saveBtn.textContent = 'Saving...';
@@ -1088,15 +1097,28 @@ window.ModalManager = (function() {
                 } catch (error) {
                     console.error('Failed to save settings:', error);
                     
+                    // Enhanced error handling for debugging
+                    let errorMessage = 'Failed to save settings';
+                    if (error.data && error.data.details) {
+                        // Validation errors from API
+                        console.error('Validation details:', error.data.details);
+                        errorMessage = `Validation failed: ${JSON.stringify(error.data.details)}`;
+                    } else if (error.message) {
+                        errorMessage = error.message;
+                    }
+                    
                     // Show error notification
                     if (window.StateManager) {
-                        window.StateManager.addNotification('error', `Failed to save settings: ${error.message}`);
+                        window.StateManager.addNotification('error', errorMessage);
                     } else {
-                        alert(`Failed to save settings: ${error.message}`);
+                        alert(errorMessage);
                     }
+                    
+                    // Reset button state on error
+                    saveBtn.style.backgroundColor = '';
+                    saveBtn.textContent = 'Save Settings';
                 } finally {
                     saveBtn.disabled = false;
-                    saveBtn.textContent = 'Save Settings';
                 }
             });
         }
