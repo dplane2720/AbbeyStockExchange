@@ -228,6 +228,10 @@ start_browser() {
         log_message "ERROR: Server not ready, cannot launch browser"
         return 1
     fi
+    log_message "Disabling screen blanking..."
+    xset s off
+    xset -dpms
+    xset s noblank
     
     log_message "Launching Chromium browser in kiosk mode..."
     chromium \
