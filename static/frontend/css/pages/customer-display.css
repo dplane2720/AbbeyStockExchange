@@ -16,6 +16,9 @@
   font-family: 'Arial', sans-serif;
   overflow: hidden;
   box-sizing: border-box;
+  
+  /* Font scaling system - default multiplier is 1.0 (100%) */
+  --font-scale-multiplier: 1;
 }
 
 /* Header with logo and branding - Fixed height for consistent layout */
@@ -43,7 +46,7 @@
 
 .logo-container::after {
   content: "Stock Exchange";
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-size: calc(clamp(2rem, 5vw, 4rem) * var(--font-scale-multiplier));
   font-weight: bold;
   color: #ffffff;
   margin-left: clamp(1rem, 2vw, 2rem);
@@ -79,6 +82,58 @@
   min-height: 0; /* Allow grid item to shrink */
 }
 
+/* Drinks display container - supports both single and two-column layouts */
+.drinks-display-container {
+  width: 100%;
+  max-width: min(1400px, 95vw);
+  display: flex;
+  gap: clamp(1rem, 2vw, 2rem);
+  align-items: flex-start;
+  height: 100%;
+}
+
+/* Single column layout */
+.drinks-display-container.single-column {
+  justify-content: center;
+}
+
+.drinks-display-container.single-column .drinks-table {
+  max-width: min(1200px, 90vw);
+}
+
+/* Two column layout */
+.drinks-display-container.two-column {
+  justify-content: space-between;
+}
+
+.drinks-display-container.two-column .drinks-column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0; /* Allow columns to shrink */
+}
+
+.drinks-display-container.two-column .drinks-table {
+  width: 100%;
+  max-width: none; /* Remove max-width restriction in two-column mode */
+}
+
+/* Responsive behavior for two-column layout */
+@media (max-width: 900px) {
+  .drinks-display-container.two-column {
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 1rem);
+  }
+  
+  .drinks-display-container.two-column .drinks-column {
+    flex: none;
+  }
+  
+  .drinks-display-container.two-column .drinks-table {
+    max-width: min(1200px, 90vw);
+  }
+}
+
 /* Dynamic scaling with consistent readability for 6-15 items */
 .drinks-table {
   width: 100%;
@@ -91,10 +146,11 @@
   display: flex;
   flex-direction: column;
   
-  /* Fixed font sizes that work well for 6-15 items */
-  --base-font-size: clamp(1rem, 1.8vw, 1.4rem);
-  --price-font-size: clamp(1.1rem, 2vw, 1.6rem);
-  --trend-font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+  /* Font sizes with scaling support */
+  --base-font-size: calc(clamp(1rem, 1.8vw, 1.4rem) * var(--font-scale-multiplier));
+  --price-font-size: calc(clamp(1.1rem, 2vw, 1.6rem) * var(--font-scale-multiplier));
+  --trend-font-size: calc(clamp(1.2rem, 2.2vw, 1.8rem) * var(--font-scale-multiplier));
+  --header-font-size: calc(clamp(1rem, 2vw, 1.5rem) * var(--font-scale-multiplier));
   
   /* Adaptive row sizing - prioritizes fitting items over large rows */
   --drink-count: 6;
@@ -110,7 +166,7 @@
   background: #333333;
   border-bottom: 2px solid #555555;
   font-weight: bold;
-  font-size: clamp(1rem, 2vw, 1.5rem); /* Match the scaling with drink content */
+  font-size: var(--header-font-size); /* Use scaled font size */
   text-transform: uppercase;
   letter-spacing: clamp(0.5px, 0.1vw, 1.5px);
   flex-shrink: 0; /* Don't shrink header */
@@ -267,7 +323,7 @@
 }
 
 .footer-timer {
-  font-size: clamp(1rem, 2.2vw, 1.8rem);
+  font-size: calc(clamp(1rem, 2.2vw, 1.8rem) * var(--font-scale-multiplier));
   font-weight: bold;
   color: #ffffff;
   text-align: center;
@@ -288,7 +344,7 @@
 .footer-timer .timer-message {
   color: #cccccc;
   margin-left: clamp(0.5rem, 1vw, 1rem);
-  font-size: clamp(0.8rem, 1.8vw, 1.4rem);
+  font-size: calc(clamp(0.8rem, 1.8vw, 1.4rem) * var(--font-scale-multiplier));
 }
 
 /* Timer warning states */

@@ -133,9 +133,18 @@ class AppSettings(Resource):
                 except Exception as e:
                     logger.warning(f"Failed to update price engine refresh cycle: {e}")
             
-            # Return updated settings
+            # Get updated settings for response and broadcast
             updated_settings = data_manager.get_settings()
             serialized_settings = settings_schema.dump(updated_settings)
+            
+            # Broadcast settings update to all connected clients for real-time updates
+            try:
+                websocket_manager = current_app.websocket_manager
+                if websocket_manager:
+                    websocket_manager.broadcast_settings_update(serialized_settings)
+                    logger.info("Settings update broadcasted to all connected clients")
+            except Exception as e:
+                logger.warning(f"Failed to broadcast settings update: {e}")
             
             logger.info(f"Updated application settings: {list(validated_data.keys())}")
             return {

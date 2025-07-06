@@ -1,0 +1,100 @@
+backup_name: 2025-07-06-backup.yaml
+backup_date: '2025-07-06T18:18:09.146701'
+backup_version: 5.0.0
+created_by: Abbey Stock Exchange v5
+description: ''
+settings:
+  refresh_cycle: 60
+  display_title: Abbey Stock Exchange
+  currency_symbol: $
+  sound_enabled: true
+  auto_backup_enabled: true
+drinks:
+- id: 2
+  name: Bell's Two Hearted - IPA
+  minimum_price: !decimal '4.50'
+  current_price: !decimal '4.50'
+  price_step_size: !decimal '0.25'
+  list_position: 1
+  trend: stable
+  sales_count: 0
+- id: 1
+  name: Artisanal Warheads - Sour
+  minimum_price: !decimal '5.00'
+  current_price: !decimal '5.00'
+  price_step_size: !decimal '0.50'
+  list_position: 2
+  trend: stable
+  sales_count: 0
+- id: 3
+  name: Black Oak Chardonnay - Wine
+  minimum_price: !decimal '4.50'
+  current_price: !decimal '4.50'
+  price_step_size: !decimal '0.25'
+  list_position: 3
+  trend: stable
+  sales_count: 0
+- id: 4
+  name: Ghost Runner Red Blend - Wine
+  minimum_price: !decimal '5.50'
+  current_price: !decimal '5.50'
+  price_step_size: !decimal '0.25'
+  list_position: 4
+  trend: stable
+  sales_count: 0
+- id: 5
+  name: Golden Road Bloomin' Blonde
+  minimum_price: !decimal '3.50'
+  current_price: !decimal '3.50'
+  price_step_size: !decimal '0.25'
+  list_position: 5
+  trend: stable
+  sales_count: 0
+- id: 6
+  name: Jester King Doom Forge
+  minimum_price: !decimal '6.00'
+  current_price: !decimal '6.00'
+  price_step_size: !decimal '0.50'
+  list_position: 6
+  trend: stable
+  sales_count: 0
+- id: 7
+  name: Narragansett Lager
+  minimum_price: !decimal '3.50'
+  current_price: !decimal '3.50'
+  price_step_size: !decimal '0.25'
+  list_position: 7
+  trend: stable
+  sales_count: 0
+- id: 8
+  name: Topping Goliath Psudo Sue - Pale Ale
+  minimum_price: !decimal '4.50'
+  current_price: !decimal '4.50'
+  price_step_size: !decimal '0.50'
+  list_position: 8
+  trend: stable
+  sales_count: 0
+- id: 9
+  name: Topping Goliath Psudo Sue
+  minimum_price: !decimal '4.50'
+  current_price: !decimal '4.50'
+  price_step_size: !decimal '0.50'
+  list_position: 9
+  trend: stable
+  sales_count: 0
+- id: 10
+  name: Topping Goliath Psudo Sue 2
+  minimum_price: !decimal '4.50'
+  current_price: !decimal '4.50'
+  price_step_size: !decimal '0.50'
+  list_position: 10
+  trend: stable
+  sales_count: 0
+- id: 11
+  name: Topping Goliath Psudo Sue 3
+  minimum_price: !decimal '4.50'
+  current_price: !decimal '4.50'
+  price_step_size: !decimal '0.50'
+  list_position: 11
+  trend: stable
+  sales_count: 0

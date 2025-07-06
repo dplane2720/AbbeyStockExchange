@@ -738,6 +738,25 @@ window.ModalManager = (function() {
                         <input type="number" id="backup-retention-days" name="backup_retention_days" 
                                value="${settings.backup_retention_days || 30}" min="1" max="365" required>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="display-layout">Display Layout:</label>
+                        <select id="display-layout" name="display_layout" required>
+                            <option value="single-column" ${(settings.display_layout || 'single-column') === 'single-column' ? 'selected' : ''}>Single Column</option>
+                            <option value="two-column" ${settings.display_layout === 'two-column' ? 'selected' : ''}>Two Columns</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="font-scale">Font Size Scale (50% - 200%):</label>
+                        <div class="font-scale-container">
+                            <input type="range" id="font-scale" name="font_scale" 
+                                   value="${settings.font_scale || 100}" min="50" max="200" step="10" 
+                                   oninput="document.getElementById('font-scale-value').textContent = this.value + '%'">
+                            <span id="font-scale-value">${settings.font_scale || 100}%</span>
+                        </div>
+                        <input type="hidden" id="font-scale-hidden" name="font_scale" value="${settings.font_scale || 100}">
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -1056,12 +1075,19 @@ window.ModalManager = (function() {
                 }
                 
                 const formData = new FormData(form);
+                
+                // Get font scale from range input
+                const fontScaleRange = form.querySelector('#font-scale');
+                const fontScaleValue = fontScaleRange ? parseInt(fontScaleRange.value) : 100;
+                
                 const settings = {
                     refresh_cycle: parseInt(formData.get('refresh_cycle')),
                     display_title: formData.get('display_title'),
                     sound_enabled: formData.get('sound_enabled') === 'on',
                     auto_backup_enabled: formData.get('auto_backup_enabled') === 'on',
-                    backup_retention_days: parseInt(formData.get('backup_retention_days'))
+                    backup_retention_days: parseInt(formData.get('backup_retention_days')),
+                    display_layout: formData.get('display_layout'),
+                    font_scale: fontScaleValue
                 };
                 
                 // Debug logging
@@ -1076,8 +1102,9 @@ window.ModalManager = (function() {
                         if (response.success) {
                             console.log('Settings saved successfully:', response.data);
                             
-                            // Show success notification
+                            // Update state manager with new settings
                             if (window.StateManager) {
+                                window.StateManager.setState('settings', response.data || settings);
                                 window.StateManager.addNotification('success', 'Settings saved successfully');
                             }
                             

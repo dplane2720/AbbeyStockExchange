@@ -300,6 +300,45 @@ class WebSocketManager:
         except Exception as e:
             logger.error(f"Error broadcasting system status: {e}")
     
+    def broadcast_settings_update(self, settings_data):
+        """
+        Broadcast settings updates to all connected clients.
+        
+        This method sends settings changes to all connected clients so they can
+        automatically update their display without manual refresh.
+        
+        Args:
+            settings_data (dict): Updated settings information
+        """
+        try:
+            if not self.connected_clients:
+                logger.debug("No connected clients for settings update broadcast")
+                return
+            
+            # Convert any Decimal objects to float for JSON serialization
+            serializable_settings = convert_decimals_to_float(settings_data)
+            
+            # Prepare broadcast message
+            message = {
+                'type': 'settings_update',
+                'timestamp': datetime.now().isoformat(),
+                'settings': serializable_settings
+            }
+            
+            # Broadcast to all connected clients (no subscription filtering for settings)
+            # Settings updates should reach all clients to maintain UI consistency
+            broadcast_count = 0
+            for session_id in self.connected_clients.keys():
+                self.socketio.emit('settings_update', message, room=session_id)
+                broadcast_count += 1
+            
+            logger.info(f"Settings update broadcasted to {broadcast_count} clients with keys: {list(serializable_settings.keys())}")
+            
+        except Exception as e:
+            logger.error(f"Error broadcasting settings update: {e}")
+            import traceback
+            logger.error(f"Settings broadcast error traceback: {traceback.format_exc()}")
+    
     def broadcast_refresh_timer(self, timer_data):
         """
         Broadcast refresh timer updates to all connected clients.

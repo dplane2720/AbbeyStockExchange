@@ -57,6 +57,25 @@ class SettingsSchema(Schema):
         )
     )
     
+    # Display layout settings
+    display_layout = fields.String(
+        load_default="single-column",
+        validate=validate.OneOf(
+            ["single-column", "two-column"],
+            error="Display layout must be either 'single-column' or 'two-column'"
+        )
+    )
+    
+    # Font scaling setting (percentage)
+    font_scale = fields.Integer(
+        load_default=100,
+        validate=validate.Range(
+            min=50,
+            max=200,
+            error="Font scale must be between 50% and 200%"
+        )
+    )
+
     # System behavior
     auto_backup_enabled = fields.Boolean(load_default=True)
     backup_retention_days = fields.Integer(
@@ -177,6 +196,15 @@ class DisplaySettingsSchema(Schema):
     
     show_trend_arrows = fields.Boolean(load_default=True)
     show_countdown_timer = fields.Boolean(load_default=True)
+    
+    # Display layout settings
+    display_layout = fields.String(
+        load_default="single-column",
+        validate=validate.OneOf(
+            ["single-column", "two-column"],
+            error="Display layout must be either 'single-column' or 'two-column'"
+        )
+    )
     
     # Font size scaling (percentage)
     font_scale = fields.Integer(

@@ -108,35 +108,46 @@ window.CustomerDisplay = (function() {
     }
     
     /**
-     * Apply dynamic scaling class based on drink count
+     * Apply dynamic scaling class based on drink count and layout
      */
-    function applyDynamicScaling() {
-        const drinksTable = document.querySelector('.drinks-table');
-        if (!drinksTable) return;
+    function applyDynamicScaling(displayLayout = 'single-column') {
+        const drinksTables = document.querySelectorAll('.drinks-table');
+        if (!drinksTables.length) return;
         
-        const drinkCount = drinks.length;
+        const totalDrinkCount = drinks.length;
         
-        // Remove existing scaling classes
-        drinksTable.classList.remove('few-drinks', 'normal-drinks', 'many-drinks', 'lots-of-drinks', 'scrollable');
+        drinksTables.forEach((drinksTable, tableIndex) => {
+            // For two-column layout, calculate drinks per table
+            let drinkCountForTable = totalDrinkCount;
+            if (displayLayout === 'two-column') {
+                const midPoint = Math.ceil(totalDrinkCount / 2);
+                drinkCountForTable = tableIndex === 0 ? midPoint : (totalDrinkCount - midPoint);
+            }
+            
+            // Remove existing scaling classes
+            drinksTable.classList.remove('few-drinks', 'normal-drinks', 'many-drinks', 'lots-of-drinks', 'scrollable');
+            
+            // Apply appropriate scaling class based on drink count per table
+            if (drinkCountForTable <= 3) {
+                drinksTable.classList.add('few-drinks');
+            } else if (drinkCountForTable <= 6) {
+                drinksTable.classList.add('normal-drinks');
+            } else if (drinkCountForTable <= 10) {
+                drinksTable.classList.add('many-drinks');
+            } else if (drinkCountForTable <= 15) {
+                drinksTable.classList.add('lots-of-drinks');
+            } else {
+                // Too many drinks, enable scrolling
+                drinksTable.classList.add('scrollable');
+            }
+            
+            // Set CSS custom properties for more precise control
+            drinksTable.style.setProperty('--drink-count', drinkCountForTable);
+            drinksTable.style.setProperty('--total-drink-count', totalDrinkCount);
+            drinksTable.style.setProperty('--display-layout', displayLayout);
+        });
         
-        // Apply appropriate scaling class based on drink count
-        if (drinkCount <= 3) {
-            drinksTable.classList.add('few-drinks');
-        } else if (drinkCount <= 6) {
-            drinksTable.classList.add('normal-drinks');
-        } else if (drinkCount <= 10) {
-            drinksTable.classList.add('many-drinks');
-        } else if (drinkCount <= 15) {
-            drinksTable.classList.add('lots-of-drinks');
-        } else {
-            // Too many drinks, enable scrolling
-            drinksTable.classList.add('scrollable');
-        }
-        
-        // Also set CSS custom property for more precise control
-        drinksTable.style.setProperty('--drink-count', drinkCount);
-        
-        console.log(`[CustomerDisplay] Applied scaling for ${drinkCount} drinks`);
+        console.log(`[CustomerDisplay] Applied scaling for ${totalDrinkCount} drinks in ${displayLayout} layout`);
     }
     function renderDrinks() {
         const drinksDisplay = document.getElementById('drinks-display');
@@ -151,9 +162,53 @@ window.CustomerDisplay = (function() {
             return;
         }
         
-        // Create table structure matching reference image
+        // Get current settings to determine layout
+        const settings = window.StateManager ? window.StateManager.getState('settings') : {};
+        const displayLayout = settings.display_layout || 'single-column';
+        const fontScale = settings.font_scale || 100;
+        
+        // Apply font scaling
+        applyFontScaling(fontScale);
+        
+        let html = '';
+        
+        if (displayLayout === 'two-column' && drinks.length > 1) {
+            // Split drinks into two columns
+            const midPoint = Math.ceil(drinks.length / 2);
+            const leftColumn = drinks.slice(0, midPoint);
+            const rightColumn = drinks.slice(midPoint);
+            
+            html = `
+                <div class="drinks-display-container two-column">
+                    <div class="drinks-column left-column">
+                        ${generateTableHTML(leftColumn, 'left')}
+                    </div>
+                    <div class="drinks-column right-column">
+                        ${generateTableHTML(rightColumn, 'right')}
+                    </div>
+                </div>
+            `;
+        } else {
+            // Single column layout
+            html = `
+                <div class="drinks-display-container single-column">
+                    ${generateTableHTML(drinks, 'single')}
+                </div>
+            `;
+        }
+        
+        drinksDisplay.innerHTML = html;
+        
+        // Apply dynamic scaling based on drink count and layout
+        applyDynamicScaling(displayLayout);
+    }
+    
+    /**
+     * Generate table HTML for a given set of drinks
+     */
+    function generateTableHTML(drinksList, columnType) {
         let html = `
-            <div class="drinks-table">
+            <div class="drinks-table ${columnType}-table">
                 <div class="table-header">
                     <div class="header-drink">Beer / Wine</div>
                     <div class="header-price">PRICE</div>
@@ -162,7 +217,7 @@ window.CustomerDisplay = (function() {
                 <div class="table-body">
         `;
         
-        drinks.forEach((drink, index) => {
+        drinksList.forEach((drink, index) => {
             const trendClass = getTrendClass(drink.trend);
             const trendIcon = getTrendIcon(drink.trend);
             
@@ -180,10 +235,17 @@ window.CustomerDisplay = (function() {
             </div>
         `;
         
-        drinksDisplay.innerHTML = html;
-        
-        // Apply dynamic scaling based on drink count
-        applyDynamicScaling();
+        return html;
+    }
+    
+    /**
+     * Apply font scaling to the display
+     */
+    function applyFontScaling(fontScale) {
+        const displayElement = document.querySelector('.customer-display');
+        if (displayElement) {
+            displayElement.style.setProperty('--font-scale-multiplier', fontScale / 100);
+        }
     }
     
     /**
@@ -564,6 +626,25 @@ window.CustomerDisplay = (function() {
     }
     
     /**
+     * Handle WebSocket settings updates
+     */
+    function handleSettingsUpdate(data) {
+        console.log('[CustomerDisplay] Settings update received:', data);
+        
+        if (data && data.settings) {
+            // Settings are already updated in StateManager by WebSocket client
+            // Just need to re-render the display with new settings
+            console.log('[CustomerDisplay] Applying settings update automatically:', Object.keys(data.settings));
+            
+            // Re-render drinks with new layout and font settings
+            renderDrinks();
+            
+            // Log successful automatic update
+            console.log('[CustomerDisplay] Display automatically updated with new settings');
+        }
+    }
+    
+    /**
      * Update footer timer display
      */
     function updateFooterTimer(timeRemaining) {
@@ -793,6 +874,34 @@ window.CustomerDisplay = (function() {
     }
     
     /**
+     * Load current settings from API
+     */
+    async function loadSettings() {
+        try {
+            if (window.APIClient) {
+                const response = await window.APIClient.get('/api/settings');
+                if (response.success && response.data) {
+                    // Update state manager with settings
+                    if (window.StateManager) {
+                        window.StateManager.setState('settings', response.data);
+                    }
+                    console.log('[CustomerDisplay] Settings loaded:', response.data);
+                    return response.data;
+                }
+            }
+        } catch (error) {
+            console.error('[CustomerDisplay] Failed to load settings:', error);
+        }
+        
+        // Return defaults if API call fails
+        return {
+            display_layout: 'single-column',
+            font_scale: 100,
+            refresh_cycle: 30
+        };
+    }
+
+    /**
      * Load initial data from API
      */
     async function loadInitialData() {
@@ -829,6 +938,10 @@ window.CustomerDisplay = (function() {
         const timerUpdateUnsub = window.WebSocketClient.onRefreshTimer(handleTimerUpdate);
         websocketUnsubscribers.push(timerUpdateUnsub);
         
+        // Subscribe to settings updates for automatic display refresh
+        const settingsUpdateUnsub = window.WebSocketClient.onSettingsUpdate(handleSettingsUpdate);
+        websocketUnsubscribers.push(settingsUpdateUnsub);
+        
         // Subscribe to connection events
         const connectUnsub = window.WebSocketClient.on('connected', () => {
             handleConnectionStatus(true);
@@ -854,6 +967,16 @@ window.CustomerDisplay = (function() {
             }
         });
         stateUnsubscribers.push(drinksUnsub);
+        
+        // Subscribe to settings changes
+        const settingsUnsub = window.StateManager.subscribe('settings', (newSettings) => {
+            if (newSettings) {
+                console.log('[CustomerDisplay] Settings updated:', newSettings);
+                // Re-render drinks with new settings
+                renderDrinks();
+            }
+        });
+        stateUnsubscribers.push(settingsUnsub);
         
         // Subscribe to connection status
         const connectionUnsub = window.StateManager.subscribe('realtime.connected', (connected) => {
@@ -920,6 +1043,9 @@ window.CustomerDisplay = (function() {
                 if (window.WebSocketClient) {
                     await window.WebSocketClient.init();
                 }
+                
+                // Load settings first
+                await loadSettings();
                 
                 // Initialize countdown timers
                 initializeTimers();

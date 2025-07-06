@@ -332,6 +332,17 @@ window.WebSocketClient = (function() {
                     }
                 });
                 
+                socket.on('settings_update', (data) => {
+                    debug('Settings update received:', data);
+                    callEventHandlers('settingsUpdate', data);
+                    
+                    // Update state manager with new settings
+                    if (window.StateManager && data.settings) {
+                        window.StateManager.setState('settings', data.settings);
+                        debug('Settings updated in state manager:', Object.keys(data.settings));
+                    }
+                });
+                
                 // Connect
                 socket.connect();
                 
@@ -524,6 +535,14 @@ window.WebSocketClient = (function() {
         onRefreshTimer: function(callback) {
             this.subscribe('timer_updates');
             return this.on('refreshTimer', callback);
+        },
+        
+        /**
+         * Subscribe to settings updates
+         */
+        onSettingsUpdate: function(callback) {
+            // Settings updates don't require subscription - they're sent to all clients
+            return this.on('settingsUpdate', callback);
         },
         
         /**
