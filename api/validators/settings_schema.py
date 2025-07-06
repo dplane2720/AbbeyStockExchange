@@ -20,7 +20,7 @@ class SettingsSchema(Schema):
     """
     
     refresh_cycle = fields.Integer(
-        required=True,
+        load_default=30,
         validate=validate.Range(
             min=1,       # 1 second minimum 
             max=3600,    # 1 hour maximum
@@ -103,13 +103,11 @@ class SettingsSchema(Schema):
     @validates('refresh_cycle')
     def validate_refresh_cycle_increments(self, value):
         """
-        Validate that refresh cycle is in reasonable increments.
-        Should be divisible by 30 seconds for better user experience.
+        Validate that refresh cycle is in reasonable range.
+        Accept any value within the range for flexibility.
         """
-        if value % 30 != 0:
-            raise ValidationError(
-                "Refresh cycle should be in 30-second increments for optimal performance"
-            )
+        # Removed the 30-second increment requirement for more flexibility
+        pass
     
     @validates('display_title')
     def validate_display_title_content(self, value):
@@ -135,11 +133,9 @@ class RefreshCycleSchema(Schema):
     
     @validates('refresh_cycle')
     def validate_refresh_cycle_increments(self, value):
-        """Validate refresh cycle increments."""
-        if value % 30 != 0:
-            raise ValidationError(
-                "Refresh cycle should be in 30-second increments"
-            )
+        """Validate refresh cycle range."""
+        # Removed the 30-second increment requirement for more flexibility
+        pass
     
     @post_load
     def format_output(self, data, **kwargs):

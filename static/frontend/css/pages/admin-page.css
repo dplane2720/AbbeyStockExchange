@@ -245,6 +245,14 @@
   background: #607d8b;
 }
 
+.settings-btn.test-mode {
+  background: #ff9800; /* Orange for test mode */
+}
+
+.settings-btn.test-mode:hover {
+  background: #f57c00; /* Darker orange on hover */
+}
+
 .settings-icon {
   font-size: clamp(1rem, 1.4vw, 1.2rem); /* Proportional to text */
   min-width: auto;

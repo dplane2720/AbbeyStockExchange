@@ -242,6 +242,7 @@ window.AdminPage = (function() {
                 return; // Exit early to wait for async load
             }
             
+            
             window.ModalManager.open(modalType, data);
         } else {
             console.log(`[AdminPage] Modal ${modalType} requested (modal manager not available)`);
@@ -437,6 +438,7 @@ window.AdminPage = (function() {
                 openModal('backups');
             });
         }
+        
     }
     
     /**

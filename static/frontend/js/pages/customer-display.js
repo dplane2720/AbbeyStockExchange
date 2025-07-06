@@ -258,26 +258,84 @@ window.CustomerDisplay = (function() {
         // Cache drinks data for offline mode
         cacheDrinks(drinks);
         
-        // Check for price changes and animate
+        // Store changes before DOM recreation
+        const changeMap = new Map();
+        let totalTrendChanges = 0;
+        
         drinks.forEach((drink, index) => {
-            const oldDrink = oldDrinks.find(d => d.id === drink.id || oldDrinks[index]);
+            // Find corresponding old drink by ID first, then by index as fallback
+            let oldDrink = null;
+            if (drink.id) {
+                oldDrink = oldDrinks.find(d => d.id === drink.id);
+            }
+            if (!oldDrink && oldDrinks[index]) {
+                oldDrink = oldDrinks[index];
+            }
+            
             if (oldDrink) {
-                const drinkElement = document.querySelector(`[data-drink-id="${drink.id || index}"]`);
-                if (drinkElement) {
-                    // Animate price change
-                    if (oldDrink.current_price !== drink.current_price) {
-                        animatePriceChange(drinkElement, drink.current_price, oldDrink.current_price);
-                    }
-                    
-                    // Animate trend change
-                    if (oldDrink.trend !== drink.trend) {
-                        animateTrendChange(drinkElement, drink.trend);
-                    }
+                const changes = {};
+                
+                // Check for price changes (handle both string and number comparisons)
+                const oldPrice = parseFloat(oldDrink.current_price);
+                const newPrice = parseFloat(drink.current_price);
+                if (oldPrice !== newPrice) {
+                    changes.priceChanged = true;
+                    changes.oldPrice = oldDrink.current_price;
+                    changes.newPrice = drink.current_price;
+                }
+                
+                // Check for trend changes with better comparison
+                const oldTrend = oldDrink.trend || 'stable';
+                const newTrend = drink.trend || 'stable';
+                if (oldTrend !== newTrend) {
+                    changes.trendChanged = true;
+                    changes.oldTrend = oldTrend;
+                    changes.newTrend = newTrend;
+                    totalTrendChanges++;
+                }
+                
+                // Store changes if any exist
+                if (changes.priceChanged || changes.trendChanged) {
+                    const drinkKey = drink.id || `index_${index}`;
+                    changeMap.set(drinkKey, changes);
                 }
             }
         });
         
+        // Log mass update detection for debugging
+        if (totalTrendChanges > 3) {
+            console.log(`[CustomerDisplay] Mass trend update detected: ${totalTrendChanges} drinks changed trends`);
+        }
+        
+        // Re-render the drinks display first
         renderDrinks();
+        
+        // Apply animations to the newly created DOM elements with staggered delays
+        const changeArray = Array.from(changeMap.entries());
+        const hasMultipleTrendChanges = changeArray.filter(([_, changes]) => changes.trendChanged).length > 1;
+        
+        changeArray.forEach(([drinkId, changes], index) => {
+            const drinkElement = document.querySelector(`[data-drink-id="${drinkId}"]`);
+            if (drinkElement) {
+                // Calculate delay for staggered animations when multiple items change
+                const baseDelay = hasMultipleTrendChanges ? index * 50 : 0; // 50ms stagger for multiple changes
+                
+                // Animate price change if it occurred
+                if (changes.priceChanged) {
+                    setTimeout(() => {
+                        animatePriceChange(drinkElement, changes.newPrice, changes.oldPrice);
+                    }, baseDelay);
+                }
+                
+                // Animate trend change if it occurred with additional delay to separate from price
+                if (changes.trendChanged) {
+                    const trendDelay = baseDelay + (changes.priceChanged ? 100 : 0); // 100ms after price change
+                    setTimeout(() => {
+                        animateTrendChange(drinkElement, changes.newTrend);
+                    }, trendDelay);
+                }
+            }
+        });
     }
     
     /**

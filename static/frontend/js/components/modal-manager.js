@@ -911,6 +911,7 @@ window.ModalManager = (function() {
         `;
     }
     
+    
     /**
      * Open specialized modal
      */
@@ -1524,6 +1525,7 @@ window.ModalManager = (function() {
         // Add form validation
         setupFormValidation(form);
     }
+    
     
     /**
      * Setup form validation

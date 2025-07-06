@@ -133,6 +133,24 @@ class BackupSettingsSchema(Schema):
         load_default=10,
         validate=validate.Range(min=1, max=100)
     )
+    
+    # Display settings
+    display_layout = fields.String(
+        load_default="single-column",
+        validate=validate.OneOf(
+            ["single-column", "two-column"],
+            error="Display layout must be either 'single-column' or 'two-column'"
+        )
+    )
+    
+    font_scale = fields.Integer(
+        load_default=100,
+        validate=validate.Range(
+            min=50,
+            max=200,
+            error="Font scale must be between 50% and 200%"
+        )
+    )
 
 
 class BackupDrinkSchema(Schema):

@@ -568,3 +568,57 @@ class DrinkReorder(Resource):
                 'error': 'Failed to reorder drinks',
                 'message': str(e)
             }, 500
+
+
+class DrinkSalesReset(Resource):
+    """API endpoint for resetting all sales counts to zero."""
+    
+    def post(self):
+        """
+        Reset all drink sales counts to zero.
+        
+        This is useful for testing the price engine or starting a fresh cycle.
+        
+        Returns:
+            JSON: Success message with count of updated drinks
+        """
+        try:
+            data_manager = current_app.data_manager
+            drinks_data = data_manager.get_drinks()
+            
+            # Reset all sales counts to 0
+            updated_drinks = []
+            updated_count = 0
+            
+            for drink in drinks_data:
+                updated_drink = drink.copy()
+                if updated_drink.get('sales_count', 0) > 0:
+                    updated_drink['sales_count'] = 0
+                    updated_count += 1
+                else:
+                    updated_drink['sales_count'] = 0  # Ensure field exists
+                updated_drinks.append(updated_drink)
+            
+            # Update data manager
+            success = data_manager.update_drinks(updated_drinks)
+            if not success:
+                return {
+                    'success': False,
+                    'error': 'Failed to reset sales counts'
+                }, 500
+            
+            logger.info(f"Reset sales counts for {updated_count} drinks (total: {len(drinks_data)})")
+            return {
+                'success': True,
+                'message': f'Sales counts reset for {len(drinks_data)} drinks',
+                'updated_count': len(drinks_data),
+                'had_sales_count': updated_count
+            }, 200
+            
+        except Exception as e:
+            logger.error(f"Failed to reset sales counts: {e}")
+            return {
+                'success': False,
+                'error': 'Failed to reset sales counts',
+                'message': str(e)
+            }, 500
