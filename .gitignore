@@ -22,3 +22,5 @@ core/__pycache__/
 data/logs/error.log
 
 static/frontend/assets/audio/place_wav_file_here.txt
+
+data/logs/abbey.log

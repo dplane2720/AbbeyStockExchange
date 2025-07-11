@@ -162,7 +162,7 @@
 
 .table-header {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 3fr 0.5fr 0.5fr;
   background: #333333;
   border-bottom: 2px solid #555555;
   font-weight: bold;
@@ -199,13 +199,14 @@
 
 .drink-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 3fr 0.5fr 0.5fr;
   padding: clamp(0.4rem, 0.8vh, 0.7rem) clamp(1rem, 3vw, 2rem);
   border-bottom: 1px solid #333333;
   transition: background-color var(--transition-fast);
   align-items: center;
-  /* Use the calculated row height with minimum for readability */
-  height: max(var(--row-height), 42px); /* Ensure minimum readable height */
+  /* Use minimum height to allow expansion for two-line names */
+  min-height: max(var(--row-height), 42px); /* Ensure minimum readable height */
+  height: auto; /* Allow row to expand for wrapped text */
   overflow: hidden; /* Ensure content doesn't overflow */
 }
 
@@ -257,8 +258,12 @@
   padding-right: clamp(0.5rem, 1vw, 1rem);
   line-height: 1.2;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-wrap: break-word;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  /* Allow text to wrap to maximum 2 lines instead of truncating */
 }
 
 /* Price styling with animations - consistent font size */
@@ -296,18 +301,24 @@
 }
 
 .trend-up {
-  color: #00ff41;
-  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+  color: #ff4136;
+  text-shadow: 0 0 8px rgba(255, 65, 54, 0.6);
 }
 
 .trend-down {
-  color: #ff4136;
-  text-shadow: 0 0 8px rgba(255, 65, 54, 0.6);
+  color: #00ff41;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
 }
 
 .trend-stable {
   color: #cccccc;
   text-shadow: 0 0 4px rgba(204, 204, 204, 0.4);
+}
+
+.trend-pending-increase {
+  color: #ff4136;
+  text-shadow: 0 0 8px rgba(255, 65, 54, 0.6);
+  animation: pending-pulse 2s infinite ease-in-out;
 }
 
 /* Footer with timer - Fixed height for consistent layout */
@@ -528,6 +539,17 @@
   0% { transform: scale(1) rotate(0deg); }
   50% { transform: scale(1.3) rotate(180deg); }
   100% { transform: scale(1) rotate(360deg); }
+}
+
+@keyframes pending-pulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.6; 
+    transform: scale(1.1); 
+  }
 }
 
 /* Custom scrollbar for overflow content */

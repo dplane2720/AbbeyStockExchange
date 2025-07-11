@@ -9,6 +9,7 @@ from flask import current_app, g
 from flask_restful import Resource, request
 from marshmallow import ValidationError
 from decimal import Decimal
+from datetime import datetime
 import logging
 
 from api.validators.drink_schema import (
@@ -453,6 +454,40 @@ class DrinkSales(Resource):
                     'success': False,
                     'error': 'Failed to record sale'
                 }, 500
+            
+            # Immediately broadcast sale preview to customer display
+            websocket_manager = current_app.websocket_manager
+            if websocket_manager:
+                try:
+                    # Create a preview update showing pending price increase
+                    preview_drinks = []
+                    for drink in updated_drinks:
+                        preview_drink = drink.copy()
+                        # If this is the drink that was sold, show preview trend
+                        if drink['id'] == drink_id:
+                            preview_drink['trend'] = 'pending_increase'  # Special preview trend
+                            preview_drink['preview_sale'] = True
+                        preview_drinks.append(preview_drink)
+                    
+                    # Broadcast immediate preview update
+                    preview_update_data = {
+                        'drinks': preview_drinks,
+                        'preview_mode': True,
+                        'sale_recorded': {
+                            'drink_id': drink_id,
+                            'drink_name': updated_drink['name'],
+                            'quantity': quantity,
+                            'sales_count': updated_drink['sales_count']
+                        },
+                        'timestamp': datetime.now().isoformat()
+                    }
+                    
+                    websocket_manager.broadcast_price_update(preview_update_data)
+                    logger.info(f"Broadcasted sale preview for drink ID {drink_id}: {updated_drink['name']} (pending increase)")
+                    
+                except Exception as e:
+                    logger.error(f"Failed to broadcast sale preview: {e}")
+                    # Don't fail the API request if WebSocket broadcast fails
             
             # Return updated drink
             drink_schema = DrinkSchema()

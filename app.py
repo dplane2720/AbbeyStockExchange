@@ -215,6 +215,7 @@ def register_api_routes(api):
     api.add_resource(drinks.DrinkDetail, '/api/drinks/<int:drink_id>')
     api.add_resource(drinks.DrinkSales, '/api/drinks/<int:drink_id>/sales')
     api.add_resource(drinks.DrinkReorder, '/api/drinks/reorder')
+    api.add_resource(drinks.DrinkSalesReset, '/api/drinks/reset-sales')
     
     # Settings API endpoints
     api.add_resource(settings.AppSettings, '/api/settings')

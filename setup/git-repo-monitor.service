@@ -12,6 +12,9 @@ ExecStart=/home/orangepi/AbbeyStockExchange/start_app.sh
 StandardOutput=journal
 StandardError=journal
 RemainAfterExit=yes
+# Timeout configuration - service will be killed after 30 seconds
+TimeoutStartSec=30
+TimeoutStopSec=10
 
 [Install]
 WantedBy=multi-user.target

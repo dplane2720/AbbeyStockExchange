@@ -36,12 +36,32 @@ window.CustomerDisplay = (function() {
     }
     
     /**
-     * Get trend icon based on trend value
+     * Get trend icon based on FR-003.5 requirements
      */
-    function getTrendIcon(trend) {
+    function getTrendIcon(trend, drink = null) {
+        // If we have drink data, calculate trend based on FR-003.5 logic
+        if (drink) {
+            const salesPerCycle = drink.sales_count || drink.sales_per_cycle || 0;
+            const currentPrice = parseFloat(drink.current_price || 0);
+            const minimumPrice = parseFloat(drink.minimum_price || 0);
+            
+            if (salesPerCycle > 0) {
+                // Has sales this cycle → up arrow (RED)
+                return '↗';
+            } else if (currentPrice > minimumPrice) {
+                // No sales and above minimum → down arrow (GREEN)
+                return '↘';
+            } else {
+                // No sales and at minimum → flat line
+                return '—';
+            }
+        }
+        
+        // Fallback to legacy trend logic
         switch (trend) {
             case 'up':
             case 'increasing':
+            case 'pending_increase':
                 return '↗';
             case 'down':
             case 'decreasing':
@@ -54,20 +74,40 @@ window.CustomerDisplay = (function() {
     }
     
     /**
-     * Get trend class for styling
+     * Get trend class for styling based on FR-003.5 requirements
      */
-    function getTrendClass(trend) {
+    function getTrendClass(trend, drink = null) {
+        // If we have drink data, calculate trend based on FR-003.5 logic
+        if (drink) {
+            const salesPerCycle = drink.sales_count || drink.sales_per_cycle || 0;
+            const currentPrice = parseFloat(drink.current_price || 0);
+            const minimumPrice = parseFloat(drink.minimum_price || 0);
+            
+            if (salesPerCycle > 0) {
+                // Has sales this cycle → RED up arrow (will increase)
+                return 'trend-up';
+            } else if (currentPrice > minimumPrice) {
+                // No sales and above minimum → GREEN down arrow (will decrease) 
+                return 'trend-down';
+            } else {
+                // No sales and at minimum → flat, no special color
+                return 'trend-stable';
+            }
+        }
+        
+        // Fallback to legacy trend logic
         switch (trend) {
             case 'up':
             case 'increasing':
-                return 'trend-up';
+            case 'pending_increase':
+                return 'trend-up';  // RED
             case 'down':
             case 'decreasing':
-                return 'trend-down';
+                return 'trend-down';  // GREEN
             case 'stable':
             case 'same':
             default:
-                return 'trend-stable';
+                return 'trend-stable';  // GRAY
         }
     }
     
@@ -218,8 +258,8 @@ window.CustomerDisplay = (function() {
         `;
         
         drinksList.forEach((drink, index) => {
-            const trendClass = getTrendClass(drink.trend);
-            const trendIcon = getTrendIcon(drink.trend);
+            const trendClass = getTrendClass(drink.trend, drink);  // Pass drink data for FR-003.5 logic
+            const trendIcon = getTrendIcon(drink.trend, drink);    // Pass drink data for FR-003.5 logic
             
             html += `
                 <div class="drink-row" data-drink-id="${drink.id || index}">
@@ -251,12 +291,14 @@ window.CustomerDisplay = (function() {
     /**
      * Update drinks with animation
      */
-    function updateDrinks(newDrinks) {
+    function updateDrinks(newDrinks, isPreviewMode = false) {
         const oldDrinks = [...drinks];
         drinks = newDrinks;
         
-        // Cache drinks data for offline mode
-        cacheDrinks(drinks);
+        // Cache drinks data for offline mode (but not preview data)
+        if (!isPreviewMode) {
+            cacheDrinks(drinks);
+        }
         
         // Store changes before DOM recreation
         const changeMap = new Map();
@@ -291,6 +333,7 @@ window.CustomerDisplay = (function() {
                     changes.trendChanged = true;
                     changes.oldTrend = oldTrend;
                     changes.newTrend = newTrend;
+                    changes.isPreview = (newTrend === 'pending_increase');
                     totalTrendChanges++;
                 }
                 
@@ -303,7 +346,9 @@ window.CustomerDisplay = (function() {
         });
         
         // Log mass update detection for debugging
-        if (totalTrendChanges > 3) {
+        if (isPreviewMode) {
+            console.log(`[CustomerDisplay] Preview mode: ${totalTrendChanges} drinks showing pending increases`);
+        } else if (totalTrendChanges > 3) {
             console.log(`[CustomerDisplay] Mass trend update detected: ${totalTrendChanges} drinks changed trends`);
         }
         
@@ -345,12 +390,27 @@ window.CustomerDisplay = (function() {
         console.log('[CustomerDisplay] Price update received:', data);
         
         if (data && data.drinks) {
-            updateDrinks(data.drinks);
-            
-            // Reset timer when price update is received (trends should be fresh)
-            loadTimerStatus().catch(() => {
-                console.warn('[CustomerDisplay] Failed to sync timer after price update');
-            });
+            // Check if this is a preview mode update (immediate sale feedback)
+            if (data.preview_mode && data.sale_recorded) {
+                const saleInfo = data.sale_recorded;
+                console.log(`[CustomerDisplay] Sale preview received: ${saleInfo.drink_name} (ID: ${saleInfo.drink_id}) - showing pending increase`);
+                
+                // Update drinks with preview trend
+                updateDrinks(data.drinks, true);  // Pass preview flag
+                
+                // Show brief notification (optional)
+                if (window.StateManager) {
+                    window.StateManager.addNotification('info', `Sale recorded: ${saleInfo.drink_name} - Price will increase at next refresh`);
+                }
+            } else {
+                // Normal price update (scheduled refresh)
+                updateDrinks(data.drinks);
+                
+                // Reset timer when price update is received (trends should be fresh)
+                loadTimerStatus().catch(() => {
+                    console.warn('[CustomerDisplay] Failed to sync timer after price update');
+                });
+            }
         }
     }
     
