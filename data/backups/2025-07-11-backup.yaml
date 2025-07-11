@@ -1,5 +1,5 @@
 backup_name: 2025-07-11-backup.yaml
-backup_date: '2025-07-11T09:25:09.650446'
+backup_date: '2025-07-11T09:49:27.876678'
 backup_version: 5.0.0
 created_by: Abbey Stock Exchange v5
 description: ''
@@ -29,7 +29,7 @@ drinks:
   current_price: !decimal '5.00'
   price_step_size: !decimal '0.50'
   list_position: 2
-  trend: stable
+  trend: decreasing
   sales_count: 0
 - id: 3
   name: Black Oak Chardonnay - Wine
@@ -37,7 +37,7 @@ drinks:
   current_price: !decimal '4.50'
   price_step_size: !decimal '0.25'
   list_position: 3
-  trend: stable
+  trend: decreasing
   sales_count: 0
 - id: 4
   name: Ghost Runner Red Blend - Wine
@@ -61,7 +61,7 @@ drinks:
   current_price: !decimal '6.00'
   price_step_size: !decimal '0.50'
   list_position: 6
-  trend: stable
+  trend: decreasing
   sales_count: 0
 - id: 7
   name: Narragansett Lager
@@ -69,7 +69,7 @@ drinks:
   current_price: !decimal '3.50'
   price_step_size: !decimal '0.25'
   list_position: 7
-  trend: stable
+  trend: decreasing
   sales_count: 0
 - id: 8
   name: Topping Goliath Psudo Sue - Pale Ale
@@ -85,7 +85,7 @@ drinks:
   current_price: !decimal '4.50'
   price_step_size: !decimal '0.50'
   list_position: 9
-  trend: stable
+  trend: decreasing
   sales_count: 0
 - id: 10
   name: Topping Goliath Psudo Sue 2
@@ -93,7 +93,7 @@ drinks:
   current_price: !decimal '4.50'
   price_step_size: !decimal '0.50'
   list_position: 10
-  trend: stable
+  trend: decreasing
   sales_count: 0
 - id: 11
   name: Topping Goliath Psudo Sue 3
@@ -101,5 +101,5 @@ drinks:
   current_price: !decimal '4.50'
   price_step_size: !decimal '0.50'
   list_position: 11
-  trend: stable
+  trend: decreasing
   sales_count: 0

@@ -40,9 +40,28 @@ window.AdminPage = (function() {
     }
     
     /**
-     * Get trend class for styling
+     * Get trend class for styling based on FR-003.5 requirements
      */
-    function getTrendClass(trend) {
+    function getTrendClass(trend, drink = null) {
+        // If we have drink data, calculate trend based on FR-003.5 logic
+        if (drink) {
+            const salesPerCycle = drink.sales_count || drink.sales_per_cycle || 0;
+            const currentPrice = parseFloat(drink.current_price || 0);
+            const minimumPrice = parseFloat(drink.minimum_price || 0);
+            
+            if (salesPerCycle > 0) {
+                // Has sales this cycle → RED up arrow (will increase)
+                return 'trend-up';
+            } else if (currentPrice > minimumPrice) {
+                // No sales and above minimum → GREEN down arrow (will decrease) 
+                return 'trend-down';
+            } else {
+                // No sales and at minimum → flat, no special color
+                return 'trend-stable';
+            }
+        }
+        
+        // Fallback to legacy trend logic
         switch (trend) {
             case 'up':
             case 'increasing':
@@ -77,8 +96,8 @@ window.AdminPage = (function() {
         
         // Render drink buttons
         drinks.forEach((drink, index) => {
-            const trendClass = getTrendClass(drink.trend);
-            const trendIcon = getTrendIcon(drink.trend);
+            const trendClass = getTrendClass(drink.trend, drink);
+            const trendIcon = getTrendIcon(drink.trend, drink);
             
             html += `
                 <button class="drink-button sale-button" data-drink-id="${drink.id || index}">

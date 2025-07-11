@@ -124,16 +124,18 @@
 }
 
 .trend-up {
-  color: #ffeb3b;
+  color: #ff4136;
+  text-shadow: 0 0 8px rgba(255, 65, 54, 0.6);
 }
 
 .trend-down {
-  color: #ff5722;
+  color: #00ff41;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
 }
 
 .trend-stable {
-  color: #ffffff;
-  opacity: 0.7;
+  color: #cccccc;
+  text-shadow: 0 0 4px rgba(204, 204, 204, 0.4);
 }
 
 /* Sale Hint for Drink Buttons - Scales with viewport */

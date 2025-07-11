@@ -24,3 +24,7 @@ data/logs/error.log
 static/frontend/assets/audio/place_wav_file_here.txt
 
 data/logs/abbey.log
+
+data/backups/2025-07-06-backup.yaml
+
+data/backups/2025-07-07-backup.yaml
