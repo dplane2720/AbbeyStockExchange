@@ -757,6 +757,27 @@ window.ModalManager = (function() {
                         </div>
                         <input type="hidden" id="font-scale-hidden" name="font_scale" value="${settings.font_scale || 100}">
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="double-click-speed">Double-Click Speed:</label>
+                        <select id="double-click-speed" name="double_click_speed" required>
+                            <option value="fast" ${(settings.double_click_speed || 'normal') === 'fast' ? 'selected' : ''}>Fast (0.8x)</option>
+                            <option value="normal" ${(settings.double_click_speed || 'normal') === 'normal' ? 'selected' : ''}>Normal (1.0x)</option>
+                            <option value="slow" ${(settings.double_click_speed || 'normal') === 'slow' ? 'selected' : ''}>Slow (1.5x)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="trend-history-cycles">Trend History Cycles:</label>
+                        <select id="trend-history-cycles" name="trend_history_cycles" required>
+                            <option value="1" ${(settings.trend_history_cycles || 1) === 1 ? 'selected' : ''}>1 Cycle (Immediate)</option>
+                            <option value="2" ${(settings.trend_history_cycles || 1) === 2 ? 'selected' : ''}>2 Cycles (Smoother)</option>
+                            <option value="3" ${(settings.trend_history_cycles || 1) === 3 ? 'selected' : ''}>3 Cycles (Rolling)</option>
+                            <option value="4" ${(settings.trend_history_cycles || 1) === 4 ? 'selected' : ''}>4 Cycles (Very Smooth)</option>
+                            <option value="5" ${(settings.trend_history_cycles || 1) === 5 ? 'selected' : ''}>5 Cycles (Smoothest)</option>
+                        </select>
+                        <small class="form-help">Controls how trend arrows are calculated. 1 = immediate trends, 2+ = smoother trends over multiple cycles.</small>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -1088,7 +1109,9 @@ window.ModalManager = (function() {
                     auto_backup_enabled: formData.get('auto_backup_enabled') === 'on',
                     backup_retention_days: parseInt(formData.get('backup_retention_days')),
                     display_layout: formData.get('display_layout'),
-                    font_scale: fontScaleValue
+                    font_scale: fontScaleValue,
+                    double_click_speed: formData.get('double_click_speed'),
+                    trend_history_cycles: parseInt(formData.get('trend_history_cycles'))
                 };
                 
                 // Debug logging

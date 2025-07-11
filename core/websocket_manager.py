@@ -223,6 +223,12 @@ class WebSocketManager:
                 'change_count': len(update_data.get('changes', {}))
             }
             
+            # Include preview mode data if present
+            if update_data.get('preview_mode'):
+                message['preview_mode'] = True
+                message['sale_recorded'] = update_data.get('sale_recorded', {})
+                logger.debug("Including preview mode data in price update")
+            
             # Broadcast to all subscribed clients
             broadcast_count = 0
             for session_id, subscriptions in self.client_subscriptions.items():
@@ -230,7 +236,12 @@ class WebSocketManager:
                     self.socketio.emit('price_update', message, room=session_id)
                     broadcast_count += 1
             
-            logger.info(f"Price update broadcasted to {broadcast_count} clients with {len(serializable_drinks)} drinks")
+            # Log with preview mode indication
+            if update_data.get('preview_mode'):
+                drink_name = update_data.get('sale_recorded', {}).get('drink_name', 'Unknown')
+                logger.info(f"Sale preview broadcasted to {broadcast_count} clients for '{drink_name}' (pending increase)")
+            else:
+                logger.info(f"Price update broadcasted to {broadcast_count} clients with {len(serializable_drinks)} drinks")
             
         except Exception as e:
             logger.error(f"Error broadcasting price update: {e}")

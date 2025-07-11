@@ -118,7 +118,9 @@ class DataManager:
                 'display_title': 'Abbey Stock Exchange',
                 'currency_symbol': '$',
                 'sound_enabled': True,
-                'auto_backup_enabled': True
+                'auto_backup_enabled': True,
+                'trend_history_cycles': config.get('DEFAULT_TREND_HISTORY_CYCLES', 1),
+                'double_click_speed': 'normal'
             },
             'drinks': []
         }

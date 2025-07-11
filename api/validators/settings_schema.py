@@ -97,6 +97,25 @@ class SettingsSchema(Schema):
         )
     )
     
+    # Trend calculation settings
+    trend_history_cycles = fields.Integer(
+        load_default=1,
+        validate=validate.Range(
+            min=1,
+            max=5,
+            error="Trend history cycles must be between 1 and 5"
+        )
+    )
+    
+    # Double-click speed setting for admin interface
+    double_click_speed = fields.String(
+        load_default="normal",
+        validate=validate.OneOf(
+            ["fast", "normal", "slow"],
+            error="Double-click speed must be 'fast', 'normal', or 'slow'"
+        )
+    )
+    
     # Last updated timestamp
     last_updated = fields.DateTime(dump_only=True)
     

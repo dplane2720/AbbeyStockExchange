@@ -148,7 +148,6 @@ class PriceEngine:
                 if sales_count >= 1:
                     # Had sales during cycle - increase price
                     new_price = old_price + drink['price_step_size']
-                    trend = 'increasing'
                     logger.debug(f"Processing {drink_name}: Had {sales_count} sales → PRICE UP ${old_price:.2f} → ${new_price:.2f}")
                 else:
                     # No sales during cycle - decrease price (down to minimum)
@@ -156,14 +155,20 @@ class PriceEngine:
                         old_price - drink['price_step_size'],
                         drink['minimum_price']
                     )
-                    trend = 'decreasing' if new_price < old_price else 'stable'
                     action = "PRICE DOWN" if new_price < old_price else "AT MINIMUM"
                     logger.debug(f"Processing {drink_name}: No sales → {action} ${old_price:.2f} → ${new_price:.2f}")
                 
                 # Update drink data
                 updated_drink = drink.copy()
                 updated_drink['current_price'] = new_price
-                updated_drink['trend'] = trend
+                # Note: trend is now calculated client-side based on FR-003.5 requirements
+                # Remove trend field from server updates to avoid conflicts
+                if 'trend' in updated_drink:
+                    del updated_drink['trend']
+                
+                # Handle sales history for rolling trend calculation
+                self._update_sales_history(updated_drink, sales_count)
+                
                 updated_drink['sales_count'] = 0  # Reset sales count
                 # Remove last_updated field - not part of schema
                 
@@ -176,7 +181,6 @@ class PriceEngine:
                         'name': drink['name'],
                         'old_price': float(old_price),  # Convert Decimal to float for JSON
                         'new_price': float(new_price),  # Convert Decimal to float for JSON
-                        'trend': trend,
                         'sales_count': sales_count
                     }
             
@@ -242,10 +246,15 @@ class PriceEngine:
         """
         try:
             logger.info("🔄 APScheduler triggered: Processing scheduled price update")
+            logger.info("⏰ PRICE ENGINE CYCLE STARTING")
             
             # Get current drinks to analyze
             current_drinks = self.data_manager.get_drinks()
             logger.info(f"📊 Current state: {len(current_drinks)} drinks loaded from data manager")
+            
+            # Add detailed logging for each drink's current state
+            for drink in current_drinks:
+                logger.info(f"📋 {drink['name']}: price=${drink['current_price']}, sales_count={drink.get('sales_count', 0)}, min=${drink['minimum_price']}")
             
             # Log current sales state before processing
             drinks_with_sales = [d for d in current_drinks if d.get('sales_count', 0) > 0]
@@ -266,7 +275,8 @@ class PriceEngine:
             logger.info(f"   - {len(update_data['changes'])} prices will change")
             if update_data['changes']:
                 for drink_id, change in update_data['changes'].items():
-                    logger.info(f"   - {change['name']}: ${change['old_price']} → ${change['new_price']} ({change['trend']})")
+                    direction = "↗" if change['new_price'] > change['old_price'] else "↘"
+                    logger.info(f"   - {change['name']}: ${change['old_price']} → ${change['new_price']} {direction}")
             
             # Save updated drinks to data manager
             logger.debug(f"Saving {len(update_data['drinks'])} updated drinks to data manager...")
@@ -319,6 +329,39 @@ class PriceEngine:
             logger.error(f"Full traceback: {traceback.format_exc()}")
             # Don't re-raise to avoid stopping the scheduler
     
+    def _update_sales_history(self, drink, current_sales_count):
+        """
+        Update the rolling sales history for a drink using fixed-length arrays.
+        
+        Each drink maintains a fixed array of [0,0,0,0,0] (5 positions).
+        At each cycle, prepend the current sales count and remove the oldest.
+        
+        Args:
+            drink: Drink dictionary to update
+            current_sales_count: Sales count for the current cycle
+        """
+        try:
+            # Get current history or initialize with fixed-length array
+            current_history = drink.get('sales_history', [])
+            
+            # Ensure we have a proper 5-element array, initialize if needed
+            if not isinstance(current_history, list) or len(current_history) != 5:
+                current_history = [0, 0, 0, 0, 0]
+            
+            # Prepend current sales count and remove oldest (last element)
+            # This shifts all elements right and drops the 5th element
+            new_history = [current_sales_count] + current_history[:4]
+            
+            # Update drink with new fixed-length history
+            drink['sales_history'] = new_history
+            
+            logger.debug(f"Updated sales history for {drink.get('name', 'Unknown')}: {new_history} (prepended {current_sales_count})")
+            
+        except Exception as e:
+            logger.error(f"Failed to update sales history for drink {drink.get('name', 'Unknown')}: {e}")
+            # Ensure drink has proper fixed-length history on error
+            drink['sales_history'] = [0, 0, 0, 0, 0]
+    
     def _scheduler_health_check(self):
         """
         Periodic health check for the APScheduler.
@@ -340,13 +383,15 @@ class PriceEngine:
                     'func': job.func.__name__ if hasattr(job, 'func') else 'Unknown'
                 })
             
-            logger.debug(f"🏥 Scheduler Health Check - Jobs: {len(jobs)}, Running: {self.scheduler.running}")
+            logger.info(f"🏥 Scheduler Health Check - Jobs: {len(jobs)}, Running: {self.scheduler.running}")
             for job in job_info:
-                logger.debug(f"   Job '{job['id']}' ({job['func']}) - Next: {job['next_run']}")
+                logger.info(f"   Job '{job['id']}' ({job['func']}) - Next: {job['next_run']}")
             
             # Check if main price update job exists
             price_job = next((job for job in jobs if job.id == 'price_update'), None)
-            if not price_job:
+            if price_job:
+                logger.info(f"💼 Price update job found - Next run: {price_job.next_run_time}")
+            else:
                 logger.error("⚠️  CRITICAL: Price update job is missing from scheduler!")
             
         except Exception as e:
@@ -374,6 +419,8 @@ class PriceEngine:
             
         except Exception as e:
             logger.error(f"Failed to force price update: {e}")
+            import traceback
+            logger.error(f"Force update error traceback: {traceback.format_exc()}")
             raise
     
     def get_engine_status(self):

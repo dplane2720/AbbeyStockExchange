@@ -37,6 +37,11 @@ class Config:
     MIN_REFRESH_CYCLE = 1        # 1 second minimum
     MAX_REFRESH_CYCLE = 3600     # 1 hour maximum
     
+    # Trend calculation settings
+    DEFAULT_TREND_HISTORY_CYCLES = 1  # 1 = immediate trends (current behavior), 2+ = rolling trends
+    MIN_TREND_HISTORY_CYCLES = 1      # Minimum 1 cycle
+    MAX_TREND_HISTORY_CYCLES = 5      # Maximum 5 cycles
+    
     # Data validation settings
     MAX_DRINK_NAME_LENGTH = 50
     MIN_PRICE = 0.0

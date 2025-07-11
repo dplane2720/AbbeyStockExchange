@@ -1,10 +1,10 @@
 backup_name: 2025-07-11-backup.yaml
-backup_date: '2025-07-11T09:49:27.876678'
+backup_date: '2025-07-11T15:37:46.126848'
 backup_version: 5.0.0
 created_by: Abbey Stock Exchange v5
 description: ''
 settings:
-  refresh_cycle: 60
+  refresh_cycle: 30
   display_title: Abbey Stock Exchange
   currency_symbol: $
   sound_enabled: true
@@ -12,8 +12,10 @@ settings:
   backup_retention_days: 30
   max_concurrent_users: 10
   display_layout: two-column
-  font_scale: 130
+  font_scale: 100
   sound_volume: 70
+  trend_history_cycles: 3
+  double_click_speed: normal
 drinks:
 - id: 2
   name: Bell's Two Hearted - IPA
@@ -23,22 +25,40 @@ drinks:
   list_position: 1
   trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 1
   name: Artisanal Warheads - Sour
   minimum_price: !decimal '5.00'
   current_price: !decimal '5.00'
   price_step_size: !decimal '0.50'
   list_position: 2
-  trend: decreasing
+  trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 3
   name: Black Oak Chardonnay - Wine
   minimum_price: !decimal '4.50'
   current_price: !decimal '4.50'
   price_step_size: !decimal '0.25'
   list_position: 3
-  trend: decreasing
+  trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 4
   name: Ghost Runner Red Blend - Wine
   minimum_price: !decimal '5.50'
@@ -47,6 +67,12 @@ drinks:
   list_position: 4
   trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 5
   name: Golden Road Bloomin' Blonde
   minimum_price: !decimal '3.50'
@@ -55,22 +81,40 @@ drinks:
   list_position: 5
   trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 6
   name: Jester King Doom Forge
   minimum_price: !decimal '6.00'
   current_price: !decimal '6.00'
   price_step_size: !decimal '0.50'
   list_position: 6
-  trend: decreasing
+  trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 7
   name: Narragansett Lager
   minimum_price: !decimal '3.50'
   current_price: !decimal '3.50'
   price_step_size: !decimal '0.25'
   list_position: 7
-  trend: decreasing
+  trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 8
   name: Topping Goliath Psudo Sue - Pale Ale
   minimum_price: !decimal '4.50'
@@ -79,27 +123,51 @@ drinks:
   list_position: 8
   trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 9
   name: Topping Goliath Psudo Sue
   minimum_price: !decimal '4.50'
   current_price: !decimal '4.50'
   price_step_size: !decimal '0.50'
   list_position: 9
-  trend: decreasing
+  trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 10
   name: Topping Goliath Psudo Sue 2
   minimum_price: !decimal '4.50'
   current_price: !decimal '4.50'
   price_step_size: !decimal '0.50'
   list_position: 10
-  trend: decreasing
+  trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 - id: 11
   name: Topping Goliath Psudo Sue 3
   minimum_price: !decimal '4.50'
   current_price: !decimal '4.50'
   price_step_size: !decimal '0.50'
   list_position: 11
-  trend: decreasing
+  trend: stable
   sales_count: 0
+  sales_history:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0

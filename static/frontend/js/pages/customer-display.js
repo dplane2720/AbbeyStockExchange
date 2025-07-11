@@ -36,20 +36,70 @@ window.CustomerDisplay = (function() {
     }
     
     /**
-     * Get trend icon based on FR-003.5 requirements
+     * Calculate rolling trend based on configurable history cycles
      */
-    function getTrendIcon(trend, drink = null) {
-        // If we have drink data, calculate trend based on FR-003.5 logic
-        if (drink) {
-            const salesPerCycle = drink.sales_count || drink.sales_per_cycle || 0;
+    function calculateRollingTrend(drink) {
+        try {
+            // Get current app settings for trend history cycles
+            const settings = window.StateManager ? window.StateManager.getState('settings') : {};
+            const historyCycles = Math.max(1, Math.min(5, (settings && settings.trend_history_cycles) || 1));
+            
+            // Current cycle sales
+            const currentSales = drink.sales_count || 0;
             const currentPrice = parseFloat(drink.current_price || 0);
             const minimumPrice = parseFloat(drink.minimum_price || 0);
             
-            if (salesPerCycle > 0) {
-                // Has sales this cycle → up arrow (RED)
-                return '↗';
+            // Get sales history array (fixed length of 5: [0,0,0,0,0])
+            const salesHistory = drink.sales_history || [0, 0, 0, 0, 0];
+            
+            // Sum positions 0 to (historyCycles-1) for rolling calculation
+            // Position 0 = most recent cycle, Position 4 = oldest cycle
+            let rollingSales = currentSales; // Current cycle (not in history array yet)
+            
+            // Add historical sales based on configured cycles
+            for (let i = 0; i < Math.min(historyCycles - 1, salesHistory.length); i++) {
+                rollingSales += (salesHistory[i] || 0);
+            }
+            
+            // Apply trend logic
+            if (rollingSales > 0) {
+                return 'up';
             } else if (currentPrice > minimumPrice) {
-                // No sales and above minimum → down arrow (GREEN)
+                return 'down';
+            } else {
+                return 'stable';
+            }
+            
+        } catch (error) {
+            console.warn('[CustomerDisplay] Error calculating rolling trend:', error);
+            // Fallback to current sales only
+            const currentSales = drink.sales_count || 0;
+            const currentPrice = parseFloat(drink.current_price || 0);
+            const minimumPrice = parseFloat(drink.minimum_price || 0);
+            
+            if (currentSales > 0) {
+                return 'up';
+            } else if (currentPrice > minimumPrice) {
+                return 'down';
+            } else {
+                return 'stable';
+            }
+        }
+    }
+    
+    /**
+     * Get trend icon based on configurable rolling history
+     */
+    function getTrendIcon(trend, drink = null) {
+        // If we have drink data, calculate trend based on rolling history
+        if (drink) {
+            const trendDirection = calculateRollingTrend(drink);
+            
+            if (trendDirection === 'up') {
+                // Has sales in rolling window → up arrow (RED)
+                return '↗';
+            } else if (trendDirection === 'down') {
+                // No sales in rolling window, above minimum → down arrow (GREEN)
                 return '↘';
             } else {
                 // No sales and at minimum → flat line
@@ -74,20 +124,18 @@ window.CustomerDisplay = (function() {
     }
     
     /**
-     * Get trend class for styling based on FR-003.5 requirements
+     * Get trend class for styling based on configurable rolling history
      */
     function getTrendClass(trend, drink = null) {
-        // If we have drink data, calculate trend based on FR-003.5 logic
+        // If we have drink data, calculate trend based on rolling history
         if (drink) {
-            const salesPerCycle = drink.sales_count || drink.sales_per_cycle || 0;
-            const currentPrice = parseFloat(drink.current_price || 0);
-            const minimumPrice = parseFloat(drink.minimum_price || 0);
+            const trendDirection = calculateRollingTrend(drink);
             
-            if (salesPerCycle > 0) {
-                // Has sales this cycle → RED up arrow (will increase)
+            if (trendDirection === 'up') {
+                // Has sales in rolling window → RED up arrow (will increase)
                 return 'trend-up';
-            } else if (currentPrice > minimumPrice) {
-                // No sales and above minimum → GREEN down arrow (will decrease) 
+            } else if (trendDirection === 'down') {
+                // No sales in rolling window, above minimum → GREEN down arrow (will decrease) 
                 return 'trend-down';
             } else {
                 // No sales and at minimum → flat, no special color

@@ -75,7 +75,8 @@ class DrinkSchema(Schema):
     )
     
     trend = fields.String(
-        required=True,
+        required=False,
+        load_default='stable',
         validate=validate.OneOf(
             ['increasing', 'stable', 'decreasing'],
             error="Trend must be 'increasing', 'stable', or 'decreasing'"
@@ -89,6 +90,14 @@ class DrinkSchema(Schema):
             min=0,
             error="Sales count cannot be negative"
         )
+    )
+    
+    # Rolling sales history for trend calculation (optional)
+    sales_history = fields.List(
+        fields.Integer(validate=validate.Range(min=0)),
+        load_default=[],
+        allow_none=True,
+        validate=validate.Length(max=5, error="Sales history cannot exceed 5 cycles")
     )
     
     last_updated = fields.DateTime(dump_only=True)

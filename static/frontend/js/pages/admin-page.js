@@ -22,9 +22,99 @@ window.AdminPage = (function() {
     }
     
     /**
-     * Get trend icon based on trend value
+     * Get double-click speed from settings
      */
-    function getTrendIcon(trend) {
+    function getDoubleClickSpeed() {
+        const settings = window.StateManager ? window.StateManager.getState('settings') : {};
+        const speedSetting = (settings && settings.double_click_speed) || 'normal';
+        
+        // Default browser double-click time is ~500ms
+        const baseTime = 500;
+        
+        switch (speedSetting) {
+            case 'fast':
+                return baseTime * 0.8;  // 400ms
+            case 'slow':
+                return baseTime * 1.5;  // 750ms
+            case 'normal':
+            default:
+                return baseTime;        // 500ms
+        }
+    }
+    
+    /**
+     * Calculate rolling trend based on configurable history cycles
+     */
+    function calculateRollingTrend(drink) {
+        try {
+            // Get current app settings for trend history cycles
+            const settings = window.StateManager ? window.StateManager.getState('settings') : {};
+            const historyCycles = Math.max(1, Math.min(5, (settings && settings.trend_history_cycles) || 1));
+            
+            // Current cycle sales
+            const currentSales = drink.sales_count || 0;
+            const currentPrice = parseFloat(drink.current_price || 0);
+            const minimumPrice = parseFloat(drink.minimum_price || 0);
+            
+            // Get sales history array (fixed length of 5: [0,0,0,0,0])
+            const salesHistory = drink.sales_history || [0, 0, 0, 0, 0];
+            
+            // Sum positions 0 to (historyCycles-1) for rolling calculation
+            // Position 0 = most recent cycle, Position 4 = oldest cycle
+            let rollingSales = currentSales; // Current cycle (not in history array yet)
+            
+            // Add historical sales based on configured cycles
+            for (let i = 0; i < Math.min(historyCycles - 1, salesHistory.length); i++) {
+                rollingSales += (salesHistory[i] || 0);
+            }
+            
+            // Apply trend logic
+            if (rollingSales > 0) {
+                return 'up';
+            } else if (currentPrice > minimumPrice) {
+                return 'down';
+            } else {
+                return 'stable';
+            }
+            
+        } catch (error) {
+            console.warn('[AdminPage] Error calculating rolling trend:', error);
+            // Fallback to current sales only
+            const currentSales = drink.sales_count || 0;
+            const currentPrice = parseFloat(drink.current_price || 0);
+            const minimumPrice = parseFloat(drink.minimum_price || 0);
+            
+            if (currentSales > 0) {
+                return 'up';
+            } else if (currentPrice > minimumPrice) {
+                return 'down';
+            } else {
+                return 'stable';
+            }
+        }
+    }
+    
+    /**
+     * Get trend icon based on configurable rolling history
+     */
+    function getTrendIcon(trend, drink = null) {
+        // If we have drink data, calculate trend based on rolling history
+        if (drink) {
+            const trendDirection = calculateRollingTrend(drink);
+            
+            if (trendDirection === 'up') {
+                // Has sales in rolling window → up arrow (RED)
+                return '↗';
+            } else if (trendDirection === 'down') {
+                // No sales in rolling window, above minimum → down arrow (GREEN)
+                return '↘';
+            } else {
+                // No sales and at minimum → flat line
+                return '—';
+            }
+        }
+        
+        // Fallback to legacy trend logic
         switch (trend) {
             case 'up':
             case 'increasing':
@@ -40,20 +130,18 @@ window.AdminPage = (function() {
     }
     
     /**
-     * Get trend class for styling based on FR-003.5 requirements
+     * Get trend class for styling based on configurable rolling history
      */
     function getTrendClass(trend, drink = null) {
-        // If we have drink data, calculate trend based on FR-003.5 logic
+        // If we have drink data, calculate trend based on rolling history
         if (drink) {
-            const salesPerCycle = drink.sales_count || drink.sales_per_cycle || 0;
-            const currentPrice = parseFloat(drink.current_price || 0);
-            const minimumPrice = parseFloat(drink.minimum_price || 0);
+            const trendDirection = calculateRollingTrend(drink);
             
-            if (salesPerCycle > 0) {
-                // Has sales this cycle → RED up arrow (will increase)
+            if (trendDirection === 'up') {
+                // Has sales in rolling window → RED up arrow (will increase)
                 return 'trend-up';
-            } else if (currentPrice > minimumPrice) {
-                // No sales and above minimum → GREEN down arrow (will decrease) 
+            } else if (trendDirection === 'down') {
+                // No sales in rolling window, above minimum → GREEN down arrow (will decrease) 
                 return 'trend-down';
             } else {
                 // No sales and at minimum → flat, no special color
@@ -129,18 +217,23 @@ window.AdminPage = (function() {
      * Attach event handlers to drink buttons
      */
     function attachDrinkEventHandlers() {
-        // Drink button clicks (for recording sales)
+        // Drink button clicks for sales recording
         const drinkButtons = document.querySelectorAll('.drink-button[data-drink-id]');
         drinkButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            // Single click to record sale
+            button.addEventListener('click', function(e) {
                 const drinkId = this.getAttribute('data-drink-id');
+                console.log(`[AdminPage] Recording sale for drinkId: ${drinkId}`);
                 recordSale(drinkId);
             });
             
-            // Double-click to edit drink (advanced feature)
-            button.addEventListener('dblclick', function() {
+            // Double-click to edit drink (native browser double-click detection)
+            button.addEventListener('dblclick', function(e) {
                 const drinkId = this.getAttribute('data-drink-id');
+                console.log(`[AdminPage] Double-click detected, calling editDrink with drinkId: ${drinkId}`);
                 editDrink(drinkId);
+                e.preventDefault();
+                e.stopPropagation();
             });
         });
         
@@ -199,6 +292,24 @@ window.AdminPage = (function() {
      */
     function editDrink(drinkId) {
         console.log(`[AdminPage] Edit drink ${drinkId}`);
+        console.log(`[AdminPage] ModalManager available:`, !!window.ModalManager);
+        console.log(`[AdminPage] Current drinks:`, drinks);
+        
+        if (!window.ModalManager) {
+            console.error('[AdminPage] ModalManager not available!');
+            return;
+        }
+        
+        // Find the drink
+        const drink = drinks.find(d => d.id == drinkId || drinks.indexOf(d) == drinkId);
+        console.log(`[AdminPage] Found drink:`, drink);
+        
+        if (!drink) {
+            console.error(`[AdminPage] Drink not found for ID: ${drinkId}`);
+            return;
+        }
+        
+        console.log(`[AdminPage] Opening edit-drink modal...`);
         openModal('edit-drink', { drinkId });
     }
     
@@ -342,6 +453,11 @@ window.AdminPage = (function() {
             if (window.APIClient) {
                 const response = await window.APIClient.get('/api/settings');
                 if (response.success && response.data) {
+                    // Update state manager with settings for trend calculations
+                    if (window.StateManager) {
+                        window.StateManager.setState('settings', response.data);
+                    }
+                    console.log('[AdminPage] Settings loaded and updated in StateManager:', response.data);
                     return response.data;
                 }
             }
@@ -350,12 +466,20 @@ window.AdminPage = (function() {
         }
         
         // Return defaults if API call fails
-        return {
+        const defaults = {
             refresh_cycle: 30,
             auto_start: true,
             backup_interval: 24,
-            max_backups: 10
+            max_backups: 10,
+            trend_history_cycles: 1
         };
+        
+        // Update state manager with defaults
+        if (window.StateManager) {
+            window.StateManager.setState('settings', defaults);
+        }
+        
+        return defaults;
     }
     
     /**
@@ -513,6 +637,9 @@ window.AdminPage = (function() {
                 
                 // Load initial data
                 await loadDrinks();
+                
+                // Load settings for trend calculations
+                await loadAppSettings();
                 
                 // Set initial connection status
                 const connected = window.WebSocketClient ? window.WebSocketClient.isConnected() : false;

@@ -151,6 +151,25 @@ class BackupSettingsSchema(Schema):
             error="Font scale must be between 50% and 200%"
         )
     )
+    
+    # Trend calculation settings
+    trend_history_cycles = fields.Integer(
+        load_default=1,
+        validate=validate.Range(
+            min=1,
+            max=5,
+            error="Trend history cycles must be between 1 and 5"
+        )
+    )
+    
+    # UI settings
+    double_click_speed = fields.String(
+        load_default="normal",
+        validate=validate.OneOf(
+            ["fast", "normal", "slow"],
+            error="Double-click speed must be 'fast', 'normal', or 'slow'"
+        )
+    )
 
 
 class BackupDrinkSchema(Schema):
@@ -204,6 +223,14 @@ class BackupDrinkSchema(Schema):
             min=0,
             error="Sales count cannot be negative"
         )
+    )
+    
+    # Rolling sales history for trend calculation
+    sales_history = fields.List(
+        fields.Integer(validate=validate.Range(min=0)),
+        load_default=[],
+        allow_none=True,
+        validate=validate.Length(max=5, error="Sales history cannot exceed 5 cycles")
     )
 
 
